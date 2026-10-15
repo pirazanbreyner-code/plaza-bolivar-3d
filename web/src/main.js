@@ -22,8 +22,8 @@ import { Pigeons } from './pigeons.js';
 import { People } from './people.js';
 import { Weather, PRESETS, makeSkyDome } from './weather.js';
 import { SoundScape } from './audio.js';
+import { BASE, assetUrl, assetJSON, assetAscii } from './assets.js';
 
-const BASE = 'scene/';
 const $ = (id) => document.getElementById(id);
 const toThree = (u, v, z = 0) => new THREE.Vector3(u, z, -v);
 const coarse = matchMedia('(pointer: coarse)').matches;
@@ -136,23 +136,8 @@ function b64decode(src) {
   }
   return out.subarray(0, o);
 }
-async function fetchBinary(url, onProgress) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`no se pudo descargar ${url} (${res.status})`);
-  const total = Number(res.headers.get('content-length')) || 0;
-  const reader = res.body.getReader();
-  const chunks = [];
-  let got = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(value); got += value.length;
-    if (total) onProgress?.(Math.min(1, got / total));
-  }
-  const text = new Uint8Array(got);
-  let o = 0;
-  for (const c of chunks) { text.set(c, o); o += c.length; }
-  let bytes = b64decode(text);
+async function fetchBinary(path, onProgress) {
+  let bytes = b64decode(await assetAscii(path, onProgress));
   if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
     const ds = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     bytes = new Uint8Array(await new Response(ds).arrayBuffer());
@@ -161,7 +146,7 @@ async function fetchBinary(url, onProgress) {
   return bytes.buffer;
 }
 async function loadHDR(name) {
-  const d = new HDRLoader().parse(await fetchBinary(BASE + name + '.b64.txt'));
+  const d = new HDRLoader().parse(await fetchBinary(name + '.b64.txt'));
   const t = new THREE.DataTexture(d.data, d.width, d.height, THREE.RGBAFormat, d.type);
   Object.assign(t, { colorSpace: THREE.LinearSRGBColorSpace, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, generateMipmaps: false, flipY: true });
   t.mapping = THREE.EquirectangularReflectionMapping;
@@ -169,7 +154,7 @@ async function loadHDR(name) {
   return t;
 }
 async function loadSkyJpg(name) {
-  const t = await texLoader.loadAsync(BASE + name);
+  const t = await texLoader.loadAsync(assetUrl(name));
   t.colorSpace = THREE.NoColorSpace;
   t.minFilter = THREE.LinearMipmapLinearFilter;
   t.anisotropy = 4;
@@ -194,7 +179,7 @@ function groundY(x, z, from = 2.6) {
 
 async function load() {
   setProgress(0.02, 'Leyendo la descripción de la escena…');
-  const meta = await (await fetch(BASE + 'scene.json')).json();
+  const meta = await assetJSON('scene.json');
   state.meta = meta;
   state.baseExposure = Math.pow(2, (meta.sky.exposure ?? -1.25) + 0.5);
   renderer.toneMappingExposure = state.baseExposure;
@@ -225,7 +210,7 @@ async function load() {
   const DYNAMIC = /Personas|Piel|Ropa|Pantalon|Paloma|Pelo|Bandera/i;
   for (const [file, label, w] of parts) {
     setProgress(acc, `Cargando ${label}…`);
-    const buf = await fetchBinary(BASE + file + '.glb.b64.txt', (f) => setProgress(acc + w * f));
+    const buf = await fetchBinary(file + '.glb.b64.txt', (f) => setProgress(acc + w * f));
     const gltf = await loader.parseAsync(buf, BASE);
     acc += w;
     gltf.scene.updateMatrixWorld(true);
@@ -266,7 +251,7 @@ async function load() {
   // calles reales con lineas, andenes y cebras
   setProgress(0.72, 'Trazando las calles…');
   await nextFrame();
-  const roadsData = await (await fetch(BASE + 'roads.json')).json();
+  const roadsData = await assetJSON('roads.json');
   const roads = buildRoads(roadsData, heightAt, {
     asfalto: getMat('asfalto (PBR)'), adoquin: getMat('adoquin (PBR)'), anden: getMat('anden (PBR)'), bordillo: getMat('bordillo (PBR)'),
   });
@@ -816,7 +801,7 @@ function setupMinimap() {
   const c = $('minimap');
   mini.ctx = c.getContext('2d');
   mini.img = new Image();
-  mini.img.src = BASE + 'minimapa.jpg';
+  mini.img.src = assetUrl('minimapa.jpg');
   c.addEventListener('click', (e) => {
     const r = c.getBoundingClientRect();
     const half = state.meta.minimap.half;

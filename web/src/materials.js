@@ -4,6 +4,7 @@
 //  - variacion de color a gran escala y suciedad cerca del suelo (rompen la repeticion)
 //  - humedad, charcos y ondas de lluvia controlados por el clima (uniformes compartidos G)
 import * as THREE from 'three';
+import { assetUrl } from './assets.js';
 
 export const G = {
   uTime: { value: 0 },
@@ -15,21 +16,19 @@ export const G = {
   uCore: { value: new THREE.Vector4(-56.0, 61.5, -68.0, 67.5) },
 };
 
-let BASE = 'scene/';
 let maxAniso = 8;
 const texLoader = new THREE.TextureLoader();
 const cache = new Map();
 export const allMaterials = [];
 
 export function initMaterials(base, renderer) {
-  BASE = base;
   maxAniso = renderer.capabilities.getMaxAnisotropy();
 }
 
 export function loadTex(path, srgb) {
   const key = path + (srgb ? '#s' : '');
   if (!cache.has(key)) {
-    const t = texLoader.load(BASE + path);
+    const t = texLoader.load(assetUrl(path));
     t.flipY = false;                       // los UV de glTF ya vienen invertidos en v
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;

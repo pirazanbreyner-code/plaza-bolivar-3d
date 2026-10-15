@@ -4,8 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/main.js --bundle --format=esm --minify --target=es2020 --outfile=public/app.js",
-    "dev": "esbuild src/main.js --bundle --format=esm --sourcemap --target=es2020 --outfile=public/app.js"
+    "build": "esbuild src/main.js --bundle --format=esm --minify --target=es2020 --outfile=public/app.js && node make_local.mjs",
+    "dev": "esbuild src/main.js --bundle --format=esm --sourcemap --target=es2020 --outfile=public/app.js",
+    "standalone": "npm run build && node make_standalone.mjs"
   },
   "dependencies": {
     "three": "0.186.0",

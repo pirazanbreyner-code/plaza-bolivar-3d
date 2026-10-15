@@ -74,6 +74,15 @@ del navegador, con rebotes de luz reales). Publicado como Artifact en claude.ai.
 | G | Tirar maíz a las palomas |
 | T | Clima |
 
+### Verlo o compartirlo
+
+- **Enlace**: el Artifact publicado en claude.ai (menú Compartir de la página). Nada que instalar.
+- **Un solo archivo**: `cd web && npm run standalone` genera `web/dist/plaza-bolivar-3d.html`
+  (unos 70 MB, todo incrustado). Se abre con doble clic en Chrome, Edge, Firefox o Safari, sin
+  servidor; se puede pasar por Drive, WeTransfer o WhatsApp (pesa demasiado para un correo).
+- **Desde esta carpeta**: `abrir_simulador.bat` (Windows) o `abrir_simulador.command` (Mac y Linux,
+  necesita python3) levantan un servidor local y abren `web/public/local.html`.
+
 Cómo se genera:
 
 1. `scripts/export_web.py` (en el pod o con `bpy`): construye la escena, aplica modificadores,
