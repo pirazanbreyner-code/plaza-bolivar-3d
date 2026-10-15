@@ -698,17 +698,18 @@ def estatua(ctx, b, coll_name="Estatua de Bolivar"):
     fig.lathe([(0, 6.45 * s), (0.30 * s, 6.55 * s), (0.42 * s, 6.92 * s), (0.40 * s, 7.25 * s),
                (0.22 * s, 7.48 * s), (0, 7.52 * s)], 14, (0, -0.06 * s, zf), scale_xy=(0.9, 1.0))
     # capa: cae desde los hombros por la espalda y el costado izquierdo hasta la pantorrilla
-    fig.lathe([(1.20 * s, 1.3 * s), (1.12 * s, 2.6 * s), (1.0 * s, 4.2 * s), (1.0 * s, 5.4 * s),
-               (1.05 * s, 6.0 * s), (0.70 * s, 6.25 * s), (0.0, 6.3 * s)], 20,
-              (0.0, 0.42 * s, zf), scale_xy=(1.0, 0.55))
+    # (sector abierto por delante: de -20 a 200 grados, el frente -y queda descubierto)
+    fig.lathe([(1.25 * s, 1.3 * s), (1.15 * s, 2.6 * s), (1.05 * s, 4.2 * s), (1.02 * s, 5.4 * s),
+               (1.05 * s, 6.0 * s), (0.75 * s, 6.25 * s), (0.45 * s, 6.3 * s)], 24,
+              (0.0, 0.12 * s, zf), scale_xy=(1.0, 0.62), arc=(-20.0, 200.0))
     # espada en la mano derecha, punta hacia el suelo
-    fig.box(0.95 * s - 0.025, -0.55 * s - 0.025, zf + 0.25 * s, 0.95 * s + 0.025,
+    fig.box(-0.95 * s - 0.025, -0.55 * s - 0.025, zf + 0.25 * s, -0.95 * s + 0.025,
             -0.55 * s + 0.025, zf + 3.4 * s)
-    fig.box(0.95 * s - 0.18, -0.55 * s - 0.03, zf + 3.35 * s, 0.95 * s + 0.18, -0.55 * s + 0.03,
+    fig.box(-0.95 * s - 0.18, -0.55 * s - 0.03, zf + 3.35 * s, -0.95 * s + 0.18, -0.55 * s + 0.03,
             zf + 3.42 * s)
     # pergamino en la mano izquierda
     fig.lathe([(0.07, 0), (0.07, 0.42), (0, 0.42)], 10, (0, 0, 0),
-              matrix=geo.mat_t(-0.62 * s, -0.75 * s, zf + 3.9 * s) @ _rot_x(90))
+              matrix=geo.mat_t(0.62 * s, -0.75 * s, zf + 3.9 * s) @ _rot_x(90))
     _finish(ped, "Pedestal", coll, [m["pedestal"]], None, 0.012)
     obj = _finish(fig, "Bolivar (bronce)", coll, [m["bronce"]], None)
     obj_body.data.materials.append(m["bronce"])
@@ -745,7 +746,8 @@ def _skin_figure(coll, h, z0):
          ("hombro_d", "codo_d"), ("codo_d", "mano_d"), ("pecho", "hombro_i"),
          ("hombro_i", "codo_i"), ("codo_i", "mano_i")]
     names = list(J)
-    verts = [(J[n][0][0] * s, J[n][0][1] * s, z0 + J[n][0][2] * s) for n in names]
+    # la figura mira hacia -y, asi que su mano derecha queda en -x (se refleja el esqueleto)
+    verts = [(-J[n][0][0] * s, J[n][0][1] * s, z0 + J[n][0][2] * s) for n in names]
     edges = [(names.index(a), names.index(b)) for a, b in E]
     me = bpy.data.meshes.new("Bolivar cuerpo")
     me.from_pydata(verts, edges, [])

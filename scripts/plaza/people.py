@@ -114,15 +114,16 @@ def scatter_pigeons(coll, mat, center, radius, n, seed, z=0.0, avoid=()):
         yaw = rnd.uniform(0, 360)
         s = rnd.uniform(0.9, 1.1)
         m = geo.mat_t(x, y, z, yaw)
-        # cuerpo (elipsoide horizontal), cabeza y cola
-        mb.lathe([(0.0, -0.13 * s), (0.04 * s, -0.10 * s), (0.055 * s, 0.0), (0.04 * s, 0.09 * s),
-                  (0.0, 0.12 * s)], 8, (0, 0, 0),
-                 matrix=m @ Matrix.Translation((0, 0, 0.09 * s)) @ Matrix.Rotation(
-                     math.radians(-80), 4, "X"))
-        mb.lathe([(0.0, 0.0), (0.025 * s, 0.01 * s), (0.022 * s, 0.04 * s), (0.0, 0.05 * s)], 6,
-                 (0, -0.12 * s, 0.14 * s), matrix=m)
+        # cuerpo (elipsoide horizontal estrecho), cabeza, cola y patas
+        mb.lathe([(0.0, -0.11 * s), (0.032 * s, -0.08 * s), (0.045 * s, 0.0), (0.035 * s, 0.07 * s),
+                  (0.0, 0.10 * s)], 8, (0, 0, 0),
+                 matrix=m @ Matrix.Translation((0, 0, 0.085 * s)) @ Matrix.Rotation(
+                     math.radians(-78), 4, "X"), scale_xy=(0.8, 1.0))
+        mb.lathe([(0.0, 0.0), (0.02 * s, 0.008 * s), (0.018 * s, 0.035 * s), (0.0, 0.042 * s)], 6,
+                 (0, -0.10 * s, 0.125 * s), matrix=m)
+        mb.box(-0.025 * s, 0.08 * s, 0.07 * s, 0.025 * s, 0.17 * s, 0.085 * s, 0, m)  # cola
         for side in (-1, 1):
-            mb.box_c(side * 0.015 * s, 0.0, 0.0, 0.006, 0.006, 0.06 * s, 0, m)
+            mb.box_c(side * 0.012 * s, 0.0, 0.0, 0.005, 0.005, 0.05 * s, 0, m)
         k += 1
     ob = mb.to_object("Palomas", coll, [mat], recalc=False)
     print(f"[palomas] {n}")

@@ -81,19 +81,28 @@ class MeshBuilder:
         self.box(cx - sx / 2, cy - sy / 2, cz, cx + sx / 2, cy + sy / 2, cz + sz, mat, matrix)
 
     def lathe(self, profile, segments=24, center=(0, 0, 0), mat=0, matrix=None,
-              smooth=True, scale_xy=(1.0, 1.0), cap_bottom=True, cap_top=True):
-        """Solido de revolucion. profile = [(r, z), ...] de abajo hacia arriba."""
+              smooth=True, scale_xy=(1.0, 1.0), cap_bottom=True, cap_top=True, arc=None):
+        """Solido de revolucion. profile = [(r, z), ...] de abajo hacia arriba.
+
+        arc=(a0, a1) en grados genera solo un sector abierto (p. ej. una capa).
+        """
         cx, cy, cz = center
         verts, faces, sm = [], [], []
         rings = []
+        if arc is not None:
+            cap_bottom = cap_top = False
+        nring = segments + 1 if arc is not None else segments
         for r, z in profile:
             if r <= 1e-6:
                 rings.append([len(verts)])
                 verts.append((cx, cy, cz + z))
             else:
                 ring = []
-                for j in range(segments):
-                    a = 2 * math.pi * j / segments
+                for j in range(nring):
+                    if arc is not None:
+                        a = math.radians(arc[0] + (arc[1] - arc[0]) * j / segments)
+                    else:
+                        a = 2 * math.pi * j / segments
                     ring.append(len(verts))
                     verts.append((cx + r * math.cos(a) * scale_xy[0],
                                   cy + r * math.sin(a) * scale_xy[1], cz + z))
@@ -103,7 +112,10 @@ class MeshBuilder:
             if len(a) == 1 and len(b) == 1:
                 continue
             for j in range(segments):
-                jn = (j + 1) % segments
+                jn = (j + 1) % segments if arc is None else j + 1
+                if len(a) == 1 or len(b) == 1:
+                    if arc is not None:
+                        continue
                 if len(a) == 1:
                     faces.append((a[0], b[jn], b[j])[::-1])
                 elif len(b) == 1:
