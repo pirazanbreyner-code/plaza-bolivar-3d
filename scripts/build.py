@@ -33,8 +33,10 @@ from plaza import terrain as T  # noqa: E402
 def parse():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", choices=["massing", "detail"], default="massing")
-    ap.add_argument("--render", choices=["none", "test", "preview", "final", "final4k"],
+    ap.add_argument("--render", choices=["none", "test", "preview", "final", "ultra", "final4k"],
                     default="preview")
+    ap.add_argument("--device", choices=["auto", "gpu", "cpu"], default="auto",
+                    help="auto = GPU si Cycles encuentra una (OptiX > CUDA > HIP > oneAPI), si no CPU")
     ap.add_argument("--cams", default="", help="lista separada por comas (vacio = todas)")
     ap.add_argument("--no-save", action="store_true")
     ap.add_argument("--suffix", default="")
@@ -372,7 +374,7 @@ def main():
     if not a.no_save:
         S.save_blend(os.path.join(ROOT, "blend", f"plaza_{tag}{a.suffix}.blend"))
     if a.render != "none":
-        S.setup_render(a.render, C.LIGHT["exposure"], C.LIGHT["look"])
+        S.setup_render(a.render, C.LIGHT["exposure"], C.LIGHT["look"], a.device)
         cams = [c for c in a.cams.split(",") if c] or list(C.CAMERAS)
         for cam in cams:
             elev, az_m, az = sun_for(C.CAMERAS[cam].get("datetime", C.LIGHT["datetime"]))

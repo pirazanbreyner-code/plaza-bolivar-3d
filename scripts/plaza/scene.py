@@ -122,17 +122,46 @@ def add_camera(name, loc, target, focal=28.0, level=True, coll=None, sensor=36.0
 PRESETS = {
     "test": dict(res=(480, 270), samples=16, threshold=0.1),
     "preview": dict(res=(960, 540), samples=64, threshold=0.05),
-    "final": dict(res=(1920, 1080), samples=384, threshold=0.015),
-    "final4k": dict(res=(3840, 2160), samples=1024, threshold=0.01),
+    "final": dict(res=(1920, 1080), samples=384, threshold=0.015),      # CPU: 20-35 min/camara
+    "ultra": dict(res=(1920, 1080), samples=1536, threshold=0.006),     # pensado para GPU
+    "final4k": dict(res=(3840, 2160), samples=1024, threshold=0.008),   # pensado para GPU
 }
 
 
-def setup_render(preset="preview", exposure=0.0, look="AgX - Base Contrast"):
+def enable_gpu(prefer=("OPTIX", "CUDA", "HIP", "ONEAPI", "METAL")):
+    """Activa la primera GPU disponible en Cycles. Devuelve (backend, [nombres]) o (None, [])."""
+    prefs = bpy.context.preferences.addons["cycles"].preferences
+    available = [t[0] for t in prefs.get_device_types(bpy.context)]
+    for be in prefer:
+        if be not in available:
+            continue
+        try:
+            prefs.compute_device_type = be
+            prefs.refresh_devices()
+        except Exception:
+            continue
+        gpus = [d for d in prefs.devices if d.type == be]
+        if gpus:
+            for d in prefs.devices:
+                d.use = d.type == be
+            return be, [d.name for d in gpus]
+    prefs.compute_device_type = "NONE"
+    return None, []
+
+
+def setup_render(preset="preview", exposure=0.0, look="AgX - Base Contrast", device="auto"):
     sc = bpy.context.scene
     p = PRESETS[preset]
     sc.render.engine = "CYCLES"
     c = sc.cycles
-    c.device = "CPU"
+    backend, names = (None, []) if device == "cpu" else enable_gpu()
+    if device == "gpu" and backend is None:
+        raise RuntimeError("Se pidio --device gpu pero Cycles no encuentra ninguna GPU")
+    c.device = "GPU" if backend else "CPU"
+    print(f"[render] dispositivo: {backend + ' ' + ', '.join(names) if backend else 'CPU'}",
+          flush=True)
+    if backend and hasattr(c, "denoising_use_gpu"):
+        c.denoising_use_gpu = True
     c.samples = p["samples"]
     c.use_adaptive_sampling = True
     c.adaptive_threshold = p["threshold"]

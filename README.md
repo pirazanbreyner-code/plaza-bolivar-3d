@@ -47,6 +47,22 @@ renders/                 # PNG (massing, detalle)
 Cámaras: `Cam_Referencia` (Justicia, Monserrate y Catedral, como la foto de referencia),
 `Cam_Capitolio`, `Cam_Catedral` (con el Sagrario y el Palacio Arzobispal) y `Cam_Aerea`.
 
+## Render rápido con GPU (Runpod)
+
+1. En Runpod crea un pod con GPU NVIDIA (por ejemplo, RTX 4090) y una plantilla con Ubuntu,
+   como "Runpod PyTorch". Abre su terminal web o JupyterLab.
+2. Ejecuta:
+   ```bash
+   git clone https://github.com/<usuario>/<repo>.git && cd <repo>
+   ./runpod.sh                 # 4 cámaras en calidad "ultra" (1920×1080, hasta 1536 muestras)
+   ./runpod.sh final4k         # o en 4K
+   ```
+3. Descarga `resultados_<calidad>.tgz` desde el navegador de archivos (PNG + `.blend`).
+   Apaga el pod al terminar para que no siga cobrando.
+
+`build.py --device auto` usa la GPU si Cycles la encuentra (OptiX, luego CUDA); `--device gpu` falla
+si no hay ninguna.
+
 ## Entorno probado
 
 Contenedor Ubuntu 24.04 en la nube, 4 núcleos Xeon a 2,1 GHz, 15 GB de RAM y **sin GPU**:
