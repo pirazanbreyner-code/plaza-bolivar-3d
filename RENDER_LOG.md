@@ -1,0 +1,24 @@
+# Registro de renders y revisiones
+
+Entorno: 4 núcleos Xeon a 2,1 GHz, sin GPU; Cycles en CPU con OpenImageDenoise.
+Imágenes de cada iteración en `renders/iteraciones/`.
+
+| Iteración | Cambios | Hallazgos de la revisión | Tiempo |
+|---|---|---|---|
+| Prueba de entorno | Esfera y cubo a 320×180, 32 muestras | Blender 5.2.2 funciona sin interfaz. Hay backends CUDA, OptiX, HIP y oneAPI, pero **sin dispositivos GPU**: se usa CPU | 1,5 s |
+| Massing (preliminar) | Cajas con medidas estimadas | Flujo completo correcto. Sobreexposición → se calibró la relación sol/cielo (`calibrate_light.py`): sol 50, exposición −3,5. Nubes marrones → su brillo pasa a ser relativo a la luminancia del cielo | 5 s por cámara |
+| v1 | Primer detalle con medidas preliminares | Plaza reconocible, pero los cerros son inventados y la distribución está equivocada (lado oriental en orden incorrecto, retícula sin girar) | ~60 s (960×540) |
+| Massing (datos reales) | Planta OSM, retícula girada 31°, terreno del modelo de elevación y 1.474 edificios OSM | Verificado: Guadalupe a unos 15° sobre el horizonte desde la plaza, por debajo de la cornisa de la Catedral; proporciones de Capitolio (88,6 × 20 m) y plaza (79 × 100 m) coherentes | 5–7 s |
+| v2 | Detalle con los datos reales | Cerros con el perfil real de Monserrate y Guadalupe. Bruma demasiado azul (7 km → 14 km); piso demasiado contrastado; cubiertas del Capitolio visibles sobre la balaustrada (se bajaron) | 70–85 s |
+| v3 | Personas (70 grupos), 260 palomas, charcos, piedra más cálida | Las personas dan escala. Barrios de las laderas con aspecto de confeti (se suavizaron) | 80–90 s |
+| v4 | **Fotos del usuario**: arenisca cálida, Justicia rediseñado, Arzobispal sobre la Cra 7 en crema, cupulines acampanados, reloj, banderas, piso seco con franjas, cámaras que replican las fotos | Gran salto de parecido. **Cubierta del Palacio de Justicia negra**: remate coplanar con la cubierta, los rayos de sombra chocan entre sí (se corrigió subiendo los remates). Estatua demasiado tosca | 66–105 s |
+| v5 | Estatua con esqueleto y modificador Skin, nubes tipo cúmulo, cámara del Capitolio con tele (46 mm) como en la foto | Composición muy cercana a la foto 4 | 103 s |
+| **Final** | 1920×1080, adaptativo hasta 384 muestras, umbral 0,015, OIDN | `Cam_Referencia`: correcta; Monserrate visible entre Justicia y la Catedral | 1.127 s (~19 min) |
+
+## Comandos
+
+```bash
+.venv/bin/python scripts/build.py --stage massing --render test
+.venv/bin/python scripts/build.py --stage detail --render final --cams Cam_Referencia
+.venv/bin/python scripts/build.py --stage detail --render final --cams Cam_Capitolio,Cam_Catedral,Cam_Aerea --no-save
+```
