@@ -22,3 +22,19 @@ Imágenes de cada iteración en `renders/iteraciones/`.
 .venv/bin/python scripts/build.py --stage detail --render final --cams Cam_Referencia
 .venv/bin/python scripts/build.py --stage detail --render final --cams Cam_Capitolio,Cam_Catedral,Cam_Aerea --no-save
 ```
+
+## GPU (Runpod, RTX 5080 16 GB, OptiX, driver 580)
+
+Calidad `ultra`: 1920×1080, adaptativo hasta 1536 muestras (4× la versión final en CPU), umbral 0,006, denoising OIDN en la GPU.
+Verificado durante el render: backend OPTIX, GPU al 100 %, unos 250 W, 2,6 GHz, 4,5 GB de VRAM; la CPU solo usa 1 núcleo.
+
+| Cámara | CPU `final` (384 muestras) | GPU `ultra` (1536 muestras) |
+|---|---|---|
+| Cam_Referencia | 1.105 s | 125 s |
+| Cam_Capitolio | 2.035 s | 193 s |
+| Cam_Catedral | 1.652 s | 172 s |
+| Cam_Aerea | — | 182 s |
+
+Unas 10 veces más rápido con 4 veces más muestras (unas 40 veces por muestra).
+Nota: el primer pod (RTX 3080 Ti) tenía la GPU averiada (`cuInit` devolvía 999 incluso con PyTorch) y se reemplazó.
+Lección: lanzar los renders largos con `setsid nohup ... &` para que no dependan de la sesión remota.
