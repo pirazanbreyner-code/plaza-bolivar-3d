@@ -62,3 +62,12 @@ Todos los valores numéricos viven en [`scripts/plaza/config.py`](scripts/plaza/
 - La suciedad cerca del suelo y la variación de color a gran escala son un efecto del shader en
   modo normal; el trazado de rayos usa los materiales PBR sin ese efecto.
 - En el modo de trazado de rayos las texturas se reducen a 1024 px y el terreno horneado pierde detalle.
+- Calles fuera de la plaza: ejes reales de OSM; el ancho de calzada es estimado por clase de vía
+  (residencial 6,5 m, terciaria 8 m, principal 10,5 m) y los andenes miden 2,6 m en todas.
+- Tráfico simplificado: sin semáforos; en los cruces cede quien llega segundo. Frena ante el jugador.
+- Peatones y palomas son figuras procedurales animadas, no modelos escaneados.
+- Fachadas de la ciudad de fondo: ladrillo o estuco escaneado con ventanas procedurales (vanos de
+  2,7–3,6 m, pisos de 3,1 m); no reproducen cada edificio real.
+- Terreno: imagen Sentinel-2 cloudless 2019 (EOX IT Services GmbH, CC BY-NC-SA 4.0, contiene datos
+  modificados de Copernicus Sentinel 2019), unos 10 m por píxel, reproyectada al marco de la retícula.
+- Cielo nublado y de lluvia: HDRI `kloofendal_overcast_puresky` (Poly Haven, CC0).

@@ -49,9 +49,19 @@ Cámaras: `Cam_Referencia` (Justicia, Monserrate y Catedral, como la foto de ref
 
 ## Simulador web (recorrido en primera persona)
 
-`web/` contiene un simulador en three.js con la misma escena: caminar con colisiones, volar,
-fichas de cada edificio, minimapa y un modo de **trazado de rayos** (path tracing en la GPU del
-navegador, con rebotes de luz reales). Publicado como Artifact en claude.ai.
+`web/` contiene un simulador en three.js con la misma escena: caminar y correr con colisiones,
+volar, fichas de cada edificio, minimapa y un modo de **trazado de rayos** (path tracing en la GPU
+del navegador, con rebotes de luz reales). Publicado como Artifact en claude.ai.
+
+- **Texturas**: escaneos PBR de Poly Haven (CC0) a 2K, con oclusión, rugosidad y altura en un solo
+  mapa (`*_arh.jpg`) y relieve por parallax; humedad, charcos y ondas de lluvia en el shader.
+- **Calles reales** (OSM vía Overture): asfalto, andenes con sardinel, líneas y cebras.
+- **Vida**: tráfico sobre el grafo vial real (sentidos únicos, carros, taxis, buses del SITP y
+  TransMilenio en la Caracas), palomas que comen maíz y huyen en bandada, peatones que caminan,
+  conversan, sacan paraguas y responden si les hablas.
+- **Clima**: soleado, nublado, lluvia, tormenta y niebla (dos cielos HDRI reales), o automático.
+- **Sonido** sintetizado en el navegador (lluvia, truenos, pasos, aleteo, pitos, campanas).
+- **Terreno**: imagen satelital Sentinel-2 cloudless 2019 de EOX (CC BY-NC-SA 4.0, uso no comercial).
 
 | Tecla | Acción |
 |---|---|
@@ -60,6 +70,9 @@ navegador, con rebotes de luz reales). Publicado como Artifact en claude.ai.
 | F (E / Q) | Volar (subir / bajar) |
 | R | Trazado de rayos (quieto, la imagen converge en segundos) |
 | M | Lugares |
+| E | Hablar con la persona que miras |
+| G | Tirar maíz a las palomas |
+| T | Clima |
 
 Cómo se genera:
 
@@ -68,6 +81,9 @@ Cómo se genera:
    fachadas de la ciudad, y escribe `scene.json` (materiales PBR, sol, cielo, cámaras, minimapa).
 2. `web/build_scene.sh <web_out>`: suelda, simplifica el terreno, cuantiza y comprime
    (gzip + base64, sin WebAssembly) en `web/public/scene/`.
+   Datos adicionales: `scripts/pod/web_textures.py` (texturas 2K y cielo nublado),
+   `scripts/pod/fetch_roads.py` + `scripts/web_roads.py` (calles), `scripts/web_sky.py` (cielo
+   nublado), `scripts/pod/fetch_satellite.py` (terreno) y `scripts/web_colors.py` (materiales).
 3. `cd web && npm install && npm run build`: empaqueta `src/main.js` en `public/app.js`.
 4. Para probar: `cd web/public && python3 -m http.server` y abrir una página con el contenido de
    `index.html` (el Artifact añade el `<head>`).
