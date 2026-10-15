@@ -1,0 +1,358 @@
+{
+ "large_sandstone_blocks": {
+  "res": 2048,
+  "avg_linear": [
+   0.1034,
+   0.096,
+   0.0773
+  ],
+  "size_m": [
+   3.0,
+   3.0
+  ],
+  "rough_mean": 0.822,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "white_sandstone_blocks_02": {
+  "res": 2048,
+  "avg_linear": [
+   0.4636,
+   0.3859,
+   0.2938
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.693,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "granite_tile_04": {
+  "res": 2048,
+  "avg_linear": [
+   0.169,
+   0.1333,
+   0.0971
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.77,
+  "authors": [
+   "Amal Kumar"
+  ]
+ },
+ "asphalt_02": {
+  "res": 2048,
+  "avg_linear": [
+   0.1165,
+   0.1146,
+   0.1021
+  ],
+  "size_m": [
+   3.0,
+   3.0
+  ],
+  "rough_mean": 0.77,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "brick_pavement_02": {
+  "res": 2048,
+  "avg_linear": [
+   0.0867,
+   0.0729,
+   0.0598
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.88,
+  "authors": [
+   "Charlotte Baglioni"
+  ]
+ },
+ "yellow_plaster": {
+  "res": 2048,
+  "avg_linear": [
+   0.2614,
+   0.189,
+   0.075
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.973,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "stone_tile_wall": {
+  "res": 2048,
+  "avg_linear": [
+   0.406,
+   0.3798,
+   0.3577
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.927,
+  "authors": [
+   "Charlotte Baglioni"
+  ]
+ },
+ "beige_wall_001": {
+  "res": 2048,
+  "avg_linear": [
+   0.344,
+   0.2555,
+   0.1876
+  ],
+  "size_m": [
+   3.0,
+   3.0
+  ],
+  "rough_mean": 0.621,
+  "authors": [
+   "Dimitrios Savva",
+   "Rico Cilliers"
+  ]
+ },
+ "granite_tile_03": {
+  "res": 1024,
+  "avg_linear": [
+   0.1324,
+   0.1072,
+   0.0872
+  ],
+  "size_m": [
+   1.802,
+   1.802
+  ],
+  "rough_mean": 0.9,
+  "authors": [
+   "Charlotte Baglioni"
+  ]
+ },
+ "red_sandstone_wall": {
+  "res": 1024,
+  "avg_linear": [
+   0.2712,
+   0.2109,
+   0.1526
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.837,
+  "authors": [
+   "Amal Kumar"
+  ]
+ },
+ "plastered_wall_04": {
+  "res": 1024,
+  "avg_linear": [
+   0.267,
+   0.2564,
+   0.2456
+  ],
+  "size_m": [
+   3.2,
+   3.2
+  ],
+  "rough_mean": 0.932,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "white_stucco": {
+  "res": 1024,
+  "avg_linear": [
+   0.6807,
+   0.6527,
+   0.628
+  ],
+  "size_m": [
+   1.998,
+   1.998
+  ],
+  "rough_mean": 0.881,
+  "authors": [
+   "Amal Kumar"
+  ]
+ },
+ "concrete_tiles": {
+  "res": 1024,
+  "avg_linear": [
+   0.1449,
+   0.1027,
+   0.0643
+  ],
+  "size_m": [
+   1.85,
+   1.85
+  ],
+  "rough_mean": 0.808,
+  "authors": [
+   "Dimitrios Savva"
+  ]
+ },
+ "granite_tile": {
+  "res": 1024,
+  "avg_linear": [
+   0.0767,
+   0.0775,
+   0.078
+  ],
+  "size_m": [
+   2.3,
+   2.3
+  ],
+  "rough_mean": 0.543,
+  "authors": [
+   "Charlotte Baglioni"
+  ]
+ },
+ "clay_roof_tiles_02": {
+  "res": 1024,
+  "avg_linear": [
+   0.312,
+   0.0864,
+   0.0267
+  ],
+  "size_m": [
+   2.5,
+   2.5
+  ],
+  "rough_mean": 0.915,
+  "authors": [
+   "Amal Kumar"
+  ]
+ },
+ "roof_slates_02": {
+  "res": 1024,
+  "avg_linear": [
+   0.2966,
+   0.2534,
+   0.1942
+  ],
+  "size_m": [
+   3.0,
+   3.0
+  ],
+  "rough_mean": 0.845,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "dark_wood": {
+  "res": 1024,
+  "avg_linear": [
+   0.1149,
+   0.0254,
+   0.0092
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.628,
+  "authors": [
+   "Dario Barresi",
+   "Dimitrios Savva",
+   "Rico Cilliers"
+  ]
+ },
+ "sandstone_blocks_08": {
+  "res": 2048,
+  "avg_linear": [
+   0.376,
+   0.2873,
+   0.1771
+  ],
+  "size_m": [
+   3.0,
+   3.0
+  ],
+  "rough_mean": 0.506,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "red_brick": {
+  "res": 1024,
+  "avg_linear": [
+   0.277,
+   0.1381,
+   0.0859
+  ],
+  "size_m": [
+   1.4,
+   1.4
+  ],
+  "rough_mean": 0.923,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "brick_wall_09": {
+  "res": 1024,
+  "avg_linear": [
+   0.3583,
+   0.2353,
+   0.1675
+  ],
+  "size_m": [
+   2.01,
+   2.01
+  ],
+  "rough_mean": 0.932,
+  "authors": [
+   "Rob Tuytel",
+   "Matterfield"
+  ]
+ },
+ "red_bricks_04": {
+  "res": 1024,
+  "avg_linear": [
+   0.1258,
+   0.0506,
+   0.0197
+  ],
+  "size_m": [
+   2.5,
+   2.5
+  ],
+  "rough_mean": 0.797,
+  "authors": [
+   "Rob Tuytel"
+  ]
+ },
+ "painted_plaster_wall": {
+  "res": 1024,
+  "avg_linear": [
+   0.4074,
+   0.3661,
+   0.3507
+  ],
+  "size_m": [
+   2.0,
+   2.0
+  ],
+  "rough_mean": 0.919,
+  "authors": [
+   "Amal Kumar"
+  ]
+ }
+}

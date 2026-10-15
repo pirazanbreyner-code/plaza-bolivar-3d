@@ -2,39 +2,37 @@
  "materials": {
   "adoquin (PBR)": {
    "type": "pbr",
-   "map": "tex/pavement_03_diff.jpg",
-   "roughnessMap": "tex/pavement_03_rough.jpg",
-   "normalMap": "tex/pavement_03_nor.jpg",
+   "tex": "brick_pavement_02",
    "tile": [
     2.0,
     2.0
    ],
    "color": [
-    1,
-    1,
-    1
-   ]
+    2.3068,
+    1.7833,
+    1.6722
+   ],
+   "pom": 0.02,
+   "normalScale": 1.5
   },
   "anden (PBR)": {
    "type": "pbr",
-   "map": "tex/stone_pavers_diff.jpg",
-   "roughnessMap": "tex/stone_pavers_rough.jpg",
-   "normalMap": "tex/stone_pavers_nor.jpg",
+   "tex": "concrete_tiles",
    "tile": [
-    2.0,
-    2.0
+    1.85,
+    1.85
    ],
    "color": [
-    2.320185614849188,
-    2.947368421052632,
-    3.5211267605633805
-   ]
+    2.0704,
+    2.7264,
+    3.888
+   ],
+   "pom": 0.008,
+   "normalScale": 1.2
   },
   "asfalto (PBR)": {
    "type": "pbr",
-   "map": "tex/asphalt_02_diff.jpg",
-   "roughnessMap": "tex/asphalt_02_rough.jpg",
-   "normalMap": "tex/asphalt_02_nor.jpg",
+   "tex": "asphalt_02",
    "tile": [
     3.0,
     3.0
@@ -43,25 +41,27 @@
     1,
     1,
     1
-   ]
+   ],
+   "pom": 0.008,
+   "normalScale": 1.3
   },
   "Bandera de Colombia": {
    "type": "flag"
   },
   "bordillo (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_04_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_04_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_04_nor.jpg",
+   "tex": "granite_tile",
    "tile": [
-    2.0,
-    2.0
+    2.3,
+    2.3
    ],
    "color": [
-    0.7477301050382766,
-    1.0872447626624238,
-    1.8030513176144245
-   ]
+    5.4759,
+    5.2903,
+    5.0
+   ],
+   "pom": 0.0,
+   "normalScale": 1.0
   },
   "Bronce estatua": {
    "type": "const",
@@ -75,33 +75,33 @@
   },
   "capitolio_piedra (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_04_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_04_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_04_nor.jpg",
+   "tex": "beige_wall_001",
    "tile": [
     3.0,
     3.0
    ],
    "color": [
-    0.8901548869503294,
-    1.2463537523203394,
-    1.8955154877484974
-   ]
+    1.3953,
+    1.7613,
+    2.0789
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
   },
   "capitolio_sillar (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_08_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_08_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_08_nor.jpg",
+   "tex": "large_sandstone_blocks",
    "tile": [
-    3.6,
-    3.6
+    3.0,
+    3.0
    ],
    "color": [
-    1.2198355873773536,
-    1.4878892733564015,
-    2.0986954055587064
-   ]
+    3.8685,
+    3.9583,
+    4.2691
+   ],
+   "pom": 0.03,
+   "normalScale": 1.4
   },
   "Carpinteria clara": {
    "type": "const",
@@ -125,33 +125,33 @@
   },
   "catedral_piedra (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_04_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_04_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_04_nor.jpg",
+   "tex": "beige_wall_001",
    "tile": [
     3.0,
     3.0
    ],
    "color": [
-    0.996973473384369,
-    1.1402810925483957,
-    1.2944983818770228
-   ]
+    1.6279,
+    1.683,
+    1.4925
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
   },
   "catedral_sillar (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_08_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_08_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_08_nor.jpg",
+   "tex": "sandstone_blocks_08",
    "tile": [
     3.0,
     3.0
    ],
    "color": [
-    1.3259082471492973,
-    1.2802768166089966,
-    1.3045944412932502
-   ]
+    1.3298,
+    1.2879,
+    1.2987
+   ],
+   "pom": 0.022,
+   "normalScale": 1.5
   },
   "Ciudad cubierta plana": {
    "type": "const",
@@ -164,66 +164,108 @@
    "metalness": 0.0
   },
   "Ciudad fachada 0": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_0.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_0_r.jpg",
+   "type": "city",
+   "tex": "red_brick",
    "tile": [
-    10.4,
-    7.0
+    1.4,
+    1.4
+   ],
+   "bay": 3.2,
+   "seed": 0.0,
+   "color": [
+    1.083,
+    0.9413,
+    0.8149
    ]
   },
   "Ciudad fachada 1": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_1.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_1_r.jpg",
+   "type": "city",
+   "tex": "brick_wall_09",
    "tile": [
-    10.4,
-    7.0
+    2.0,
+    2.0
+   ],
+   "bay": 2.8,
+   "seed": 17.3,
+   "color": [
+    0.9489,
+    0.8075,
+    0.7164
    ]
   },
   "Ciudad fachada 2": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_2.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_2_r.jpg",
+   "type": "city",
+   "tex": "red_bricks_04",
    "tile": [
-    10.4,
-    7.0
+    2.5,
+    2.5
+   ],
+   "bay": 3.4,
+   "seed": 34.6,
+   "color": [
+    1.7488,
+    1.7787,
+    2.5381
    ]
   },
   "Ciudad fachada 3": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_3.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_3_r.jpg",
+   "type": "city",
+   "tex": "painted_plaster_wall",
    "tile": [
-    10.4,
-    7.0
+    2.0,
+    2.0
+   ],
+   "bay": 2.9,
+   "seed": 51.900000000000006,
+   "color": [
+    1.7182,
+    1.6935,
+    1.3687
    ]
   },
   "Ciudad fachada 4": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_4.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_4_r.jpg",
+   "type": "city",
+   "tex": "painted_plaster_wall",
    "tile": [
-    10.4,
-    7.0
+    2.0,
+    2.0
+   ],
+   "bay": 3.1,
+   "seed": 69.2,
+   "color": [
+    1.9637,
+    2.1306,
+    2.1101
    ]
   },
   "Ciudad fachada 5": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_5.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_5_r.jpg",
+   "type": "city",
+   "tex": "plastered_wall_04",
    "tile": [
-    10.4,
-    7.0
+    3.2,
+    3.2
+   ],
+   "bay": 2.7,
+   "seed": 86.5,
+   "color": [
+    2.6966,
+    2.0281,
+    1.4658
    ]
   },
   "Ciudad fachada 6": {
-   "type": "tile",
-   "map": "tex/Ciudad_fachada_6.jpg",
-   "roughnessMap": "tex/Ciudad_fachada_6_r.jpg",
+   "type": "city",
+   "tex": "plastered_wall_04",
    "tile": [
-    10.4,
-    7.0
+    3.2,
+    3.2
+   ],
+   "bay": 3.6,
+   "seed": 103.80000000000001,
+   "color": [
+    1.573,
+    1.6381,
+    1.6694
    ]
   },
   "Colonial zocalo": {
@@ -238,63 +280,63 @@
   },
   "colonial_blanco (PBR)": {
    "type": "pbr",
-   "map": "tex/white_stucco_diff.jpg",
-   "roughnessMap": "tex/white_stucco_rough.jpg",
-   "normalMap": "tex/white_stucco_nor.jpg",
+   "tex": "plastered_wall_04",
    "tile": [
-    2.0,
-    2.0
+    3.2,
+    3.2
    ],
    "color": [
-    1.264334019406057,
-    1.3052825552825553,
-    1.288782816229117
-   ]
+    3.221,
+    3.3151,
+    3.298
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
   },
   "crema (PBR)": {
    "type": "pbr",
-   "map": "tex/painted_plaster_wall_diff.jpg",
-   "roughnessMap": "tex/painted_plaster_wall_rough.jpg",
-   "normalMap": "tex/painted_plaster_wall_nor.jpg",
+   "tex": "plastered_wall_04",
    "tile": [
-    2.0,
-    2.0
+    3.2,
+    3.2
    ],
    "color": [
-    1.9665683382497543,
-    1.8594476346732294,
-    1.2560662289466171
-   ]
+    2.9963,
+    2.6521,
+    1.7915
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
   },
   "cupula (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_04_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_04_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_04_nor.jpg",
+   "tex": "sandstone_blocks_08",
    "tile": [
     3.0,
     3.0
    ],
    "color": [
-    1.0681858643403952,
-    1.3789445770352693,
-    1.8030513176144245
-   ]
+    1.5957,
+    1.81,
+    2.2021
+   ],
+   "pom": 0.015,
+   "normalScale": 1.3
   },
   "cupula_roja (PBR)": {
    "type": "pbr",
-   "map": "tex/clay_roof_tiles_02_diff.jpg",
-   "roughnessMap": "tex/clay_roof_tiles_02_rough.jpg",
-   "normalMap": "tex/clay_roof_tiles_02_nor.jpg",
+   "tex": "clay_roof_tiles_02",
    "tile": [
     1.6,
     1.6
    ],
    "color": [
-    1.3605442176870748,
-    0.5861664712778429,
-    1.33587786259542
-   ]
+    1.3462,
+    0.5787,
+    1.3109
+   ],
+   "pom": 0.03,
+   "normalScale": 1.3
   },
   "Esfera del reloj": {
    "type": "const",
@@ -329,18 +371,18 @@
   },
   "justicia_piedra (PBR)": {
    "type": "pbr",
-   "map": "tex/stone_tile_wall_diff.jpg",
-   "roughnessMap": "tex/stone_tile_wall_rough.jpg",
-   "normalMap": "tex/stone_tile_wall_nor.jpg",
+   "tex": "stone_tile_wall",
    "tile": [
     4.0,
     4.0
    ],
    "color": [
-    1.6364988842053063,
-    1.5852047556142668,
-    1.4108352144469527
-   ]
+    1.6256,
+    1.5798,
+    1.3978
+   ],
+   "pom": 0.008,
+   "normalScale": 1.2
   },
   "Letras bronce": {
    "type": "const",
@@ -354,54 +396,52 @@
   },
   "lievano_estuco (PBR)": {
    "type": "pbr",
-   "map": "tex/painted_plaster_wall_diff.jpg",
-   "roughnessMap": "tex/painted_plaster_wall_rough.jpg",
-   "normalMap": "tex/painted_plaster_wall_nor.jpg",
+   "tex": "yellow_plaster",
    "tile": [
     2.0,
     2.0
    ],
    "color": [
-    1.9665683382497543,
-    1.5313098167897183,
-    0.5709391949757351
-   ]
+    3.0604,
+    2.963,
+    2.6667
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
   },
   "lievano_molduras (PBR)": {
    "type": "pbr",
-   "map": "tex/white_stucco_diff.jpg",
-   "roughnessMap": "tex/white_stucco_rough.jpg",
-   "normalMap": "tex/white_stucco_nor.jpg",
+   "tex": "white_stucco",
    "tile": [
     2.0,
     2.0
    ],
    "color": [
-    1.264334019406057,
-    1.3052825552825553,
-    1.288782816229117
-   ]
+    1.2634,
+    1.3023,
+    1.2898
+   ],
+   "pom": 0.0,
+   "normalScale": 1.0
   },
   "lievano_piedra (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_08_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_08_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_08_nor.jpg",
+   "tex": "white_sandstone_blocks_02",
    "tile": [
-    3.0,
-    3.0
+    2.0,
+    2.0
    ],
    "color": [
-    1.3789445770352693,
-    1.6955017301038062,
-    2.495745887691435
-   ]
+    1.1217,
+    1.2698,
+    1.4976
+   ],
+   "pom": 0.02,
+   "normalScale": 1.4
   },
   "madera (PBR)": {
    "type": "pbr",
-   "map": "tex/dark_wood_diff.jpg",
-   "roughnessMap": "tex/dark_wood_rough.jpg",
-   "normalMap": "tex/dark_wood_nor.jpg",
+   "tex": "dark_wood",
    "tile": [
     2.0,
     2.0
@@ -410,7 +450,9 @@
     1,
     1,
     1
-   ]
+   ],
+   "pom": 0.0,
+   "normalScale": 1.0
   },
   "Madera balcones": {
    "type": "const",
@@ -424,33 +466,33 @@
   },
   "molduras_blancas (PBR)": {
    "type": "pbr",
-   "map": "tex/white_stucco_diff.jpg",
-   "roughnessMap": "tex/white_stucco_rough.jpg",
-   "normalMap": "tex/white_stucco_nor.jpg",
+   "tex": "white_stucco",
    "tile": [
     2.0,
     2.0
    ],
    "color": [
-    1.2496324610408702,
-    1.2899262899262898,
-    1.2728719172633256
-   ]
+    1.2487,
+    1.287,
+    1.2739
+   ],
+   "pom": 0.0,
+   "normalScale": 1.0
   },
   "ocre_rojo (PBR)": {
    "type": "pbr",
-   "map": "tex/painted_plaster_wall_diff.jpg",
-   "roughnessMap": "tex/painted_plaster_wall_rough.jpg",
-   "normalMap": "tex/painted_plaster_wall_nor.jpg",
+   "tex": "yellow_plaster",
    "tile": [
     2.0,
     2.0
    ],
    "color": [
-    1.3520157325467062,
-    0.7656549083948592,
-    0.4852983157293749
-   ]
+    2.1041,
+    1.4815,
+    2.2667
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
   },
   "Paloma": {
    "type": "const",
@@ -514,18 +556,18 @@
   },
   "pedestal (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_04_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_04_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_04_nor.jpg",
+   "tex": "granite_tile",
    "tile": [
-    2.0,
-    2.0
+    2.3,
+    2.3
    ],
    "color": [
-    0.39166815025814494,
-    0.5568814638027049,
-    0.878409616273694
-   ]
+    2.8683,
+    2.7097,
+    2.4359
+   ],
+   "pom": 0.006,
+   "normalScale": 1.0
   },
   "Pelo y zapatos": {
    "type": "const",
@@ -579,48 +621,48 @@
   },
   "pizarra (PBR)": {
    "type": "pbr",
-   "map": "tex/roof_slates_02_diff.jpg",
-   "roughnessMap": "tex/roof_slates_02_rough.jpg",
-   "normalMap": "tex/roof_slates_02_nor.jpg",
+   "tex": "roof_slates_02",
    "tile": [
     3.0,
     3.0
    ],
    "color": [
-    0.5542085209560097,
-    0.6907761072734661,
-    1.0138740661686232
-   ]
+    0.5394,
+    0.6709,
+    0.9784
+   ],
+   "pom": 0.015,
+   "normalScale": 1.2
   },
   "plaza (PBR)": {
    "type": "pbr",
-   "map": "tex/concrete_pavement_diff.jpg",
-   "roughnessMap": "tex/concrete_pavement_rough.jpg",
-   "normalMap": "tex/concrete_pavement_nor.jpg",
+   "tex": "granite_tile_04",
    "tile": [
-    1.8,
-    1.8
+    3.2,
+    3.2
    ],
    "color": [
-    1.1199253383107792,
-    1.3038548752834467,
-    1.5601783060921248
-   ]
+    1.4201,
+    1.7254,
+    2.1627
+   ],
+   "pom": 0.006,
+   "normalScale": 1.2
   },
   "plaza_franjas (PBR)": {
    "type": "pbr",
-   "map": "tex/concrete_pavement_diff.jpg",
-   "roughnessMap": "tex/concrete_pavement_rough.jpg",
-   "normalMap": "tex/concrete_pavement_nor.jpg",
+   "tex": "granite_tile_03",
    "tile": [
-    1.8,
-    1.8
+    2.4,
+    2.4
    ],
    "color": [
-    1.8665422305179658,
-    2.0975056689342404,
-    2.37741456166419
-   ]
+    3.0211,
+    3.4515,
+    3.6697
+   ],
+   "pom": 0.006,
+   "normalScale": 1.2
   },
   "Ropa 0": {
    "type": "const",
@@ -724,33 +766,33 @@
   },
   "sagrario_estuco (PBR)": {
    "type": "pbr",
-   "map": "tex/white_stucco_diff.jpg",
-   "roughnessMap": "tex/white_stucco_rough.jpg",
-   "normalMap": "tex/white_stucco_nor.jpg",
+   "tex": "white_stucco",
    "tile": [
     2.0,
     2.0
    ],
    "color": [
-    1.1467215524845633,
-    1.1670761670761671,
-    1.1137629276054097
-   ]
+    1.1459,
+    1.1644,
+    1.1146
+   ],
+   "pom": 0.0,
+   "normalScale": 1.0
   },
   "sagrario_piedra (PBR)": {
    "type": "pbr",
-   "map": "tex/sandstone_blocks_08_diff.jpg",
-   "roughnessMap": "tex/sandstone_blocks_08_rough.jpg",
-   "normalMap": "tex/sandstone_blocks_08_nor.jpg",
+   "tex": "red_sandstone_wall",
    "tile": [
     2.2,
     2.2
    ],
    "color": [
-    0.7955449482895783,
-    0.9688581314878895,
-    1.4180374361883152
-   ]
+    0.9587,
+    1.138,
+    1.3761
+   ],
+   "pom": 0.02,
+   "normalScale": 1.5
   },
   "Santuarios": {
    "type": "const",
@@ -764,18 +806,18 @@
   },
   "teja (PBR)": {
    "type": "pbr",
-   "map": "tex/clay_roof_tiles_02_diff.jpg",
-   "roughnessMap": "tex/clay_roof_tiles_02_rough.jpg",
-   "normalMap": "tex/clay_roof_tiles_02_nor.jpg",
+   "tex": "clay_roof_tiles_02",
    "tile": [
     2.5,
     2.5
    ],
    "color": [
-    1,
-    1,
-    1
-   ]
+    0.641,
+    0.9838,
+    2.0599
+   ],
+   "pom": 0.035,
+   "normalScale": 1.3
   },
   "Vidrio": {
    "type": "const",
@@ -800,9 +842,40 @@
   },
   "Terreno": {
    "type": "unique",
-   "map": "tex/terreno.jpg",
+   "map": "tex/terreno_sat.jpg",
    "roughness": 0.92,
-   "uv": "UVTerr"
+   "uv": "UVTerr",
+   "source": "Sentinel-2 cloudless 2019 (EOX IT Services GmbH, CC BY-NC-SA 4.0; contiene datos modificados de Copernicus Sentinel 2019)"
+  },
+  "arzobispal_sillar (PBR)": {
+   "type": "pbr",
+   "tex": "plastered_wall_04",
+   "tile": [
+    3.2,
+    3.2
+   ],
+   "color": [
+    2.9963,
+    2.6521,
+    1.7915
+   ],
+   "pom": 0.0,
+   "normalScale": 1.2
+  },
+  "arzobispal_piedra (PBR)": {
+   "type": "pbr",
+   "tex": "white_stucco",
+   "tile": [
+    2.0,
+    2.0
+   ],
+   "color": [
+    1.234,
+    1.2716,
+    1.258
+   ],
+   "pom": 0.0,
+   "normalScale": 1.0
   }
  },
  "sun": {

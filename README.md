@@ -47,6 +47,33 @@ renders/                 # PNG (massing, detalle)
 Cámaras: `Cam_Referencia` (Justicia, Monserrate y Catedral, como la foto de referencia),
 `Cam_Capitolio`, `Cam_Catedral` (con el Sagrario y el Palacio Arzobispal) y `Cam_Aerea`.
 
+## Simulador web (recorrido en primera persona)
+
+`web/` contiene un simulador en three.js con la misma escena: caminar con colisiones, volar,
+fichas de cada edificio, minimapa y un modo de **trazado de rayos** (path tracing en la GPU del
+navegador, con rebotes de luz reales). Publicado como Artifact en claude.ai.
+
+| Tecla | Acción |
+|---|---|
+| Clic / Esc | Mirar con el ratón / soltarlo |
+| W A S D, Mayús, Espacio | Caminar, correr, saltar |
+| F (E / Q) | Volar (subir / bajar) |
+| R | Trazado de rayos (quieto, la imagen converge en segundos) |
+| M | Lugares |
+
+Cómo se genera:
+
+1. `scripts/export_web.py` (en el pod o con `bpy`): construye la escena, aplica modificadores,
+   agrupa por material, exporta `nucleo`, `ciudad` y `terreno` en GLB, hornea el terreno y las
+   fachadas de la ciudad, y escribe `scene.json` (materiales PBR, sol, cielo, cámaras, minimapa).
+2. `web/build_scene.sh <web_out>`: suelda, simplifica el terreno, cuantiza y comprime
+   (gzip + base64, sin WebAssembly) en `web/public/scene/`.
+3. `cd web && npm install && npm run build`: empaqueta `src/main.js` en `public/app.js`.
+4. Para probar: `cd web/public && python3 -m http.server` y abrir una página con el contenido de
+   `index.html` (el Artifact añade el `<head>`).
+
+Si se cambian solo los tintes de `config.TEXTURES`, basta con `scripts/web_colors.py`.
+
 ## Render rápido con GPU (Runpod)
 
 1. En Runpod crea un pod con GPU NVIDIA (por ejemplo, RTX 4090) y una plantilla con Ubuntu,

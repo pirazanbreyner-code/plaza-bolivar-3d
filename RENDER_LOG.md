@@ -38,3 +38,17 @@ Verificado durante el render: backend OPTIX, GPU al 100 %, unos 250 W, 2,6 GHz, 
 Unas 10 veces más rápido con 4 veces más muestras (unas 40 veces por muestra).
 Nota: el primer pod (RTX 3080 Ti) tenía la GPU averiada (`cuInit` devolvía 999 incluso con PyTorch) y se reemplazó.
 Lección: lanzar los renders largos con `setsid nohup ... &` para que no dependan de la sesión remota.
+
+## Texturas PBR, cielo HDRI y simulador web
+
+- Texturas CC0 de Poly Haven teñidas por material y cielo HDRI `kloofendal_48d_partly_cloudy_puresky`
+  (8K) con el sol alineado al de Bogotá el 15-10 a las 14:23 (elevación 47,9°): rotación 277,2°,
+  exposición −1,25 y refuerzo solar de 2,5.
+- Exportación web en el pod (RTX 5080): unos 2 min. Núcleo 704.574 triángulos, terreno 720.784
+  (se simplifica a 216.000), ciudad 55.676. Escena web final unos 26 MB.
+- Simulador probado en Chromium sin GPU (SwiftShader): carga en 10–17 s, colisiones, fichas,
+  minimapa y trazado de rayos funcionando. Revisión: la Catedral salía casi blanca con AgX → mapeo
+  Neutral y tinte de arenisca más tostado (0,50, 0,37, 0,23). El trazado de rayos salía vacío
+  (atributos cuantizados) → se pasan a float al cargar.
+- Render `ultra` con las texturas nuevas: **falló** (`illegal memory access`, CUDA 700) porque
+  ComfyUI, que viene en la plantilla del pod, retenía 12 GB de los 16 GB de VRAM.

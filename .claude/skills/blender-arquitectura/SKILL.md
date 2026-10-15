@@ -70,8 +70,11 @@ Convenciones de `scripts/plaza/`:
 
 ## 4. Materiales
 
-- Procedurales (no hay acceso a bibliotecas de texturas): `scripts/plaza/materials.py`.
-- Usar coordenadas **Object** en metros, nunca UVs automáticas.
+- Preferir texturas PBR CC0 (Poly Haven, descargadas en el pod: `scripts/pod/fetch_assets.py`;
+  la API exige un User-Agent). `M.pbr()` las tiñe al color medio deseado: factor = tinte / media
+  lineal de la textura (`references/data/assets_info.json`). Sin texturas, quedan las procedurales.
+- UV en metros con el grupo de nodos `geo.box_uv_group()` (atributo FLOAT2 "UVMap" por esquina,
+  proyección por normal); nunca UVs automáticas.
 - Sillería (bloques de piedra) con Brick Texture en proyección por normal (x,z)/(y,z).
 - Añadir siempre: variación de color de baja frecuencia, rugosidad variable,
   suciedad en los primeros ~1,5 m y chorreaduras verticales. Es lo que más realismo aporta.
@@ -82,6 +85,22 @@ Convenciones de `scripts/plaza/`:
   apagado para no duplicar). Nubes procedurales en el World.
 - Gestión de color AgX (look *Base Contrast* o *Medium High Contrast*), exposición ajustada a ojo.
 - Presets: `preview` (960×540, hasta 64 muestras), `final` (1920×1080, adaptativo hasta 384, umbral 0,015; unos 15–25 min por cámara en 4 núcleos).
+
+- Cielo HDRI real: localizar su sol (píxel más brillante), calcular la hora de Bogotá con esa
+  elevación y girar el HDRI para que el azimut coincida (`build.hdri_rotation`). Reforzar con una
+  lámpara Sun alineada si el sol del HDRI está velado.
+- GPU compartida: comprobar `nvidia-smi` antes de lanzar. Otro proceso (p. ej. ComfyUI de la
+  plantilla) puede retener 12 GB de VRAM y Cycles falla con `illegal memory access` (CUDA 700).
+
+## 5b. Exportar al simulador web
+
+- `scripts/export_web.py`: aplicar modificadores, unir por material, exportar GLB con
+  materiales PLACEHOLDER y nombres de malla `<bloque>:<material>`; los materiales se describen en
+  `scene.json` y se recrean en three.js. Hornear lo procedural (terreno, fachadas de la ciudad).
+- Los artifacts no sirven .glb ni .hdr, y la página no debe depender de WebAssembly:
+  cuantizar + gzip + base64 (`web/build_scene.sh`). Pasar los atributos cuantizados a float al
+  cargar: el path tracer de three-gpu-pathtracer no los desnormaliza (la escena sale vacía).
+- En three.js, AgX lava la arenisca; usar el mapeo Neutral con +0,5 EV.
 
 ## 6. Revisión de renders (obligatorio tras cada render)
 

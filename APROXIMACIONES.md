@@ -39,11 +39,26 @@ Todos los valores numéricos viven en [`scripts/plaza/config.py`](scripts/plaza/
 | Terreno cerca de la plaza | Plano hasta 380 m y fundido con el modelo de elevación hasta 900 m | La pendiente real (unos 4,5 % hacia el ONO) se ignora en el entorno inmediato | — |
 | Cobertura de los cerros | Barrios por debajo de unos 2.760 m, bosque hasta 3.150 m, páramo por encima, roca en pendientes fuertes | Estimado por altitud (sin mapa de coberturas) | Imagen satelital |
 | Santuarios de Monserrate y Guadalupe | Volúmenes simples en la cumbre más cercana del modelo de elevación | Coordenadas aproximadas | — |
-| Mobiliario urbano (faroles, bolardos, bancas) | **No modelado** | Sin datos verificables | Street View |
-| Personas, palomas, vehículos | **No modelados** | — | — |
+| Faroles | Filas a lo largo de los bordes oriental y occidental de la plaza, 4,6 m de alto | Fotos del usuario; separación estimada | Street View |
+| Bolardos, bancas, señales | **No modelados** | Sin datos verificables | Street View |
+| Personas y palomas | 70 grupos de personas esquemáticas y 260 palomas, distribuidos al azar (semilla fija) | Solo dan escala | — |
+| Vehículos | **No modelados** | — | — |
 
 ## Simplificaciones técnicas
 
-- Las texturas son procedurales (sin fotos): no reproducen manchas, letreros ni reparaciones reales.
+- Texturas PBR fotográficas CC0 (Poly Haven: sillería de arenisca, estuco, losas, teja, pizarra), teñidas al color medio estimado de cada edificio. No son fotos de los edificios reales: no reproducen manchas, letreros ni reparaciones.
+- Cielo: HDRI real (Kloofendal, cielo parcialmente nublado) girado para que su sol coincida con el sol de Bogotá el 15 de octubre a las 14:23. Las nubes no son las de Bogotá.
 - Los relieves, las esculturas de las fachadas y los capiteles corintios son geometría simplificada.
 - Bruma atmosférica: mezcla exponencial por distancia (14 km) con el color del propio modelo de cielo. No es un volumen físico.
+
+## Simulador web (diferencias con el render de Cycles)
+
+- El terreno se simplifica al 30 % de los vértices (error máximo unos 4 m a varios km de distancia).
+- La geometría se cuantiza a 14 bits por eje y bloque (unos 2 cm en el núcleo de la plaza).
+- La luz del sol es una luz direccional con sombras en un radio de 110 m alrededor del jugador;
+  más lejos no hay sombras proyectadas (sí en el modo de trazado de rayos).
+- Mapeo de tonos "Neutral" de Khronos con +0,5 EV respecto a Cycles: AgX en three.js lavaba la
+  arenisca. Los colores se acercan a las fotos, no a un valor radiométrico exacto.
+- La suciedad cerca del suelo y la variación de color a gran escala son un efecto del shader en
+  modo normal; el trazado de rayos usa los materiales PBR sin ese efecto.
+- En el modo de trazado de rayos las texturas se reducen a 1024 px y el terreno horneado pierde detalle.

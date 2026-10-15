@@ -221,6 +221,52 @@ TEXTURES = {
     "bordillo": ("sandstone_blocks_04", 2.0, (0.42, 0.41, 0.39)),
 }
 
+# Simulador web: material -> (textura, tamano real en m, color lineal medio deseado o None,
+#                             profundidad del relieve en m para parallax, intensidad del normal)
+# Texturas de scripts/pod/web_textures.py (2K las principales). Elegidas comparando con las fotos.
+WEB_MATERIALS = {
+    "catedral_sillar": ("sandstone_blocks_08", 3.0, (0.50, 0.37, 0.23), 0.022, 1.5),
+    "catedral_piedra": ("beige_wall_001", 3.0, (0.56, 0.43, 0.28), 0.0, 1.2),
+    "capitolio_sillar": ("large_sandstone_blocks", 3.0, (0.40, 0.38, 0.33), 0.03, 1.4),  # gris envejecido
+    "capitolio_piedra": ("beige_wall_001", 3.0, (0.48, 0.45, 0.39), 0.0, 1.2),
+    "justicia_piedra": ("stone_tile_wall", 4.0, (0.66, 0.60, 0.50), 0.008, 1.2),
+    "sagrario_piedra": ("red_sandstone_wall", 2.2, (0.26, 0.24, 0.21), 0.02, 1.5),
+    "sagrario_estuco": ("white_stucco", 2.0, (0.78, 0.76, 0.70), 0.0, 1.0),
+    "arzobispal_sillar": ("plastered_wall_04", 3.2, (0.80, 0.68, 0.44), 0.0, 1.2),
+    "arzobispal_piedra": ("white_stucco", 2.0, (0.84, 0.83, 0.79), 0.0, 1.0),
+    "crema": ("plastered_wall_04", 3.2, (0.80, 0.68, 0.44), 0.0, 1.2),
+    "ocre_rojo": ("yellow_plaster", 2.0, (0.55, 0.28, 0.17), 0.0, 1.2),
+    "molduras_blancas": ("white_stucco", 2.0, (0.85, 0.84, 0.80), 0.0, 1.0),
+    "lievano_estuco": ("yellow_plaster", 2.0, (0.80, 0.56, 0.20), 0.0, 1.2),
+    "lievano_molduras": ("white_stucco", 2.0, (0.86, 0.85, 0.81), 0.0, 1.0),
+    "lievano_piedra": ("white_sandstone_blocks_02", 2.0, (0.52, 0.49, 0.44), 0.02, 1.4),
+    "colonial_blanco": ("plastered_wall_04", 3.2, (0.86, 0.85, 0.81), 0.0, 1.2),
+    "cupula": ("sandstone_blocks_08", 3.0, (0.60, 0.52, 0.39), 0.015, 1.3),
+    "pedestal": ("granite_tile", 2.3, (0.22, 0.21, 0.19), 0.006, 1.0),
+    "teja": ("clay_roof_tiles_02", 2.5, (0.2, 0.085, 0.055), 0.035, 1.3),    # teja de barro envejecida
+    "cupula_roja": ("clay_roof_tiles_02", 1.6, (0.42, 0.05, 0.035), 0.03, 1.3),
+    "pizarra": ("roof_slates_02", 3.0, (0.16, 0.17, 0.19), 0.015, 1.2),
+    "plaza": ("granite_tile_04", 3.2, (0.24, 0.23, 0.21), 0.006, 1.2),   # losas de 0,8 m
+    "plaza_franjas": ("granite_tile_03", 2.4, (0.40, 0.37, 0.32), 0.006, 1.2),
+    "adoquin": ("brick_pavement_02", 2.0, (0.20, 0.13, 0.10), 0.02, 1.5),   # ladrillo de la Cra 7
+    "anden": ("concrete_tiles", 1.85, (0.30, 0.28, 0.25), 0.008, 1.2),
+    "asfalto": ("asphalt_02", 3.0, None, 0.008, 1.3),
+    "madera": ("dark_wood", 2.0, None, 0.0, 1.0),
+    "bordillo": ("granite_tile", 2.3, (0.42, 0.41, 0.39), 0.0, 1.0),
+}
+
+# Simulador web: fachadas de la ciudad de fondo (7 variantes de Blender "Ciudad fachada k"):
+# (textura, tamano en m, color lineal medio, ancho de vano de ventana en m)
+WEB_CITY = [
+    ("red_brick", 1.4, (0.30, 0.13, 0.07), 3.2),           # ladrillo tolete
+    ("brick_wall_09", 2.0, (0.34, 0.19, 0.12), 2.8),
+    ("red_bricks_04", 2.5, (0.22, 0.09, 0.05), 3.4),
+    ("painted_plaster_wall", 2.0, (0.70, 0.62, 0.48), 2.9),  # estuco crema
+    ("painted_plaster_wall", 2.0, (0.80, 0.78, 0.74), 3.1),  # estuco blanco
+    ("plastered_wall_04", 3.2, (0.72, 0.52, 0.36), 2.7),     # estuco ocre
+    ("plastered_wall_04", 3.2, (0.42, 0.42, 0.41), 3.6),     # concreto gris
+]
+
 LIGHT = {
     "datetime": "2026-10-15T15:45:00",
     # calibrado con scripts/calibrate_light.py: relacion directa/difusa ~3
