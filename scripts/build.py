@@ -325,9 +325,9 @@ def build(stage):
 
     # estatua sobre su plataforma
     sp = C.PLAZA["statue_platform"]
+    B.estatua(ctx, C.STATUE)  # aplica el giro de la estatua a sus objetos
     st_root = geo.empty("Estatua de Bolivar (origen)", ctx.coll("Estatua de Bolivar"),
                         (sp["center"][0], sp["center"][1], sp["height"]), 0.0)
-    obj = B.estatua(ctx, C.STATUE)
     for o in ctx.coll("Estatua de Bolivar").objects:
         if o is not st_root and o.parent is None:
             o.parent = st_root
