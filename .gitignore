@@ -3,3 +3,5 @@ __pycache__/
 *.blend1
 renders/test/
 renders/logs/
+web/node_modules/
+web/public/_test.html

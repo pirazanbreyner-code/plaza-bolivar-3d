@@ -1,0 +1,19 @@
+{
+  "name": "plaza-bolivar-simulador",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/main.js --bundle --format=esm --minify --target=es2020 --outfile=public/app.js",
+    "dev": "esbuild src/main.js --bundle --format=esm --sourcemap --target=es2020 --outfile=public/app.js"
+  },
+  "dependencies": {
+    "three": "0.186.0",
+    "three-mesh-bvh": "0.9.15",
+    "three-gpu-pathtracer": "0.0.25"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10",
+    "@gltf-transform/cli": "4.5.0"
+  }
+}

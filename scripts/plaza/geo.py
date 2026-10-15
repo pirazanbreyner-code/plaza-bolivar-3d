@@ -433,3 +433,71 @@ def window_unit(mb_frame, mb_glass, x0, z0, w, h, y, arch_top=False, mullions=Tr
         mb_frame.box(x0, y - 0.01, zt - fw / 2, x0 + w, y + frame_d - 0.01, zt + fw / 2, 0, matrix)
         zz = z0 + (zt - z0) * 0.5  # palillo intermedio (cuarterones)
         mb_frame.box(x0, y - 0.005, zz - 0.02, x0 + w, y + frame_d - 0.02, zz + 0.02, 0, matrix)
+
+
+# ---------------------------------------------------------------- UV de caja (Geometry Nodes)
+
+def box_uv_group():
+    """Grupo de nodos que guarda 'UVMap' (en metros) proyectando por la normal dominante.
+
+    Caras verticales: (x,z) o (y,z); horizontales: (x,y). Funciona con modificadores vivos
+    (booleanas) porque se evalua al final de la pila, y se exporta tal cual a glTF.
+    """
+    ng = bpy.data.node_groups.get("UV caja (metros)")
+    if ng:
+        return ng
+    ng = bpy.data.node_groups.new("UV caja (metros)", "GeometryNodeTree")
+    ng.interface.new_socket("Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
+    ng.interface.new_socket("Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
+    N, Lk = ng.nodes, ng.links
+    gi, go = N.new("NodeGroupInput"), N.new("NodeGroupOutput")
+    pos, nor = N.new("GeometryNodeInputPosition"), N.new("GeometryNodeInputNormal")
+    sp, sn = N.new("ShaderNodeSeparateXYZ"), N.new("ShaderNodeSeparateXYZ")
+    Lk.new(pos.outputs[0], sp.inputs[0])
+    Lk.new(nor.outputs[0], sn.inputs[0])
+
+    def m(op, a, b=None):
+        n = N.new("ShaderNodeMath")
+        n.operation = op
+        Lk.new(a, n.inputs[0])
+        if b is not None:
+            if isinstance(b, (int, float)):
+                n.inputs[1].default_value = b
+            else:
+                Lk.new(b, n.inputs[1])
+        return n.outputs[0]
+
+    def comb(x, y):
+        n = N.new("ShaderNodeCombineXYZ")
+        Lk.new(x, n.inputs[0])
+        Lk.new(y, n.inputs[1])
+        return n.outputs[0]
+
+    def mixv(f, a, b):
+        n = N.new("ShaderNodeMix")
+        n.data_type = "VECTOR"
+        Lk.new(f, n.inputs[0])
+        Lk.new(a, n.inputs[4])
+        Lk.new(b, n.inputs[5])
+        return n.outputs[1]
+
+    ax, ay, az = m("ABSOLUTE", sn.outputs[0]), m("ABSOLUTE", sn.outputs[1]), m("ABSOLUTE", sn.outputs[2])
+    use_yz = m("GREATER_THAN", ax, ay)
+    v = mixv(use_yz, comb(sp.outputs[0], sp.outputs[2]), comb(sp.outputs[1], sp.outputs[2]))
+    top = m("GREATER_THAN", az, 0.7)
+    v = mixv(top, v, comb(sp.outputs[0], sp.outputs[1]))
+    st = N.new("GeometryNodeStoreNamedAttribute")
+    st.data_type = "FLOAT2"
+    st.domain = "CORNER"
+    st.inputs["Name"].default_value = "UVMap"
+    Lk.new(gi.outputs[0], st.inputs["Geometry"])
+    Lk.new(v, st.inputs["Value"])
+    Lk.new(st.outputs[0], go.inputs[0])
+    return ng
+
+
+def add_box_uv(obj):
+    if obj.type != "MESH" or "UV caja" in obj.modifiers:
+        return
+    mod = obj.modifiers.new("UV caja", "NODES")
+    mod.node_group = box_uv_group()

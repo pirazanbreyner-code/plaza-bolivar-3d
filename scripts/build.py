@@ -92,6 +92,8 @@ def make_materials(massing):
         "vidrio_azul": M.flat("Vidrio azul cupula", (0.05, 0.12, 0.22), 0.08),
         "reloj": M.flat("Esfera del reloj", (0.85, 0.84, 0.80), 0.4),
         "bandera": M.flag("Bandera de Colombia"),
+        "cupula_roja": M.flat("Cupula roja", (0.42, 0.06, 0.04), 0.6),
+        "farol_vidrio": M.lamp_glass("Farol vidrio"),
         "pizarra": M.slate("Pizarra mansarda"),
         "teja": M.roof_tile("Teja de barro"),
         "cupula": M.smooth_stone("Cupulas", **P["cupula"]),
@@ -113,6 +115,22 @@ def make_materials(massing):
         "ciudad_plana": M.flat("Ciudad cubierta plana", (0.32, 0.31, 0.30), 0.85),
     })
     mm["ciudad_teja"] = mm["teja"]
+    mm["plaza_franjas"] = mm["plaza"]
+    # texturas escaneadas (si estan disponibles) sustituyen a los procedurales
+    if M.TEX is not None:
+        n = 0
+        for key, (tex, tile, tint) in C.TEXTURES.items():
+            extra = {}
+            if key in ("teja", "pizarra", "asfalto", "adoquin", "anden", "plaza", "plaza_franjas"):
+                extra["grime"] = 0.4
+            if key == "pedestal":
+                extra.update(rough_mul=0.8)
+            mat = M.pbr(f"{key} (PBR)", tex, tile, tint, **extra)
+            if mat is not None:
+                mm[key] = mat
+                n += 1
+        mm["ciudad_teja"] = mm["teja"]
+        print(f"[materiales] {n} materiales con texturas escaneadas")
     return mm
 
 
@@ -177,6 +195,36 @@ def build_ground(mm, coll):
                                                             if "catedral_piedra" in mm else
                                                             mm["massing"]])
     geo.bevel(o, 0.015)
+    # franjas claras del piso (reticula) sobre la plataforma, evitando la base de la estatua
+    if "plaza_franjas" in mm:
+        B_ = C.PLAZA_BANDS
+        bands = geo.MeshBuilder()
+        (u0, u1), (v0, v1) = B_["u"], B_["v"]
+        w2 = B_["width"] / 2
+        hx = sp["size"] / 2 + 2 * 0.40 * (nsteps - 1) + 0.2
+        def clip_add(a0, b0, a1, b1):
+            # recorta contra la plataforma de la estatua (divide en hasta 4 trozos)
+            sx0, sx1, sy0, sy1 = cx - hx, cx + hx, cy - hx, cy + hx
+            if a1 <= sx0 or a0 >= sx1 or b1 <= sy0 or b0 >= sy1:
+                bands.box(a0, b0, 0.0, a1, b1, 0.004)
+                return
+            for (q0, r0, q1, r1) in ((a0, b0, min(a1, sx0), b1), (max(a0, sx1), b0, a1, b1),
+                                     (max(a0, sx0), b0, min(a1, sx1), min(b1, sy0)),
+                                     (max(a0, sx0), max(b0, sy1), min(a1, sx1), b1)):
+                if q1 - q0 > 0.05 and r1 - r0 > 0.05:
+                    bands.box(q0, r0, 0.0, q1, r1, 0.004)
+        k = 0
+        u = u0 + B_["every"] / 2
+        while u < u1:
+            clip_add(u - w2, v0, u + w2, v1)
+            u += B_["every"]
+        v = v0 + B_["every"] / 2
+        while v < v1:
+            clip_add(u0, v - w2, u1, v + w2)
+            v += B_["every"]
+        bands.to_object("Plaza franjas claras", coll, [mm["plaza_franjas"]])
+        add_lamps(mm, coll, zs)
+
     # muro del jardin del Palacio Arzobispal (desactivado: las fotos muestran fachada en linea)
     gw = C.GARDEN_WALL
     if not gw:
@@ -187,6 +235,41 @@ def build_ground(mm, coll):
     o = w.to_object("Muro jardin arzobispal", coll, [mm.get("arzobispal_sillar", mm["massing"])])
     geo.bevel(o, 0.02)
     return zs
+
+
+# ---------------------------------------------------------------- faroles
+
+def lamp_mesh(h=4.6):
+    """Farol clasico de hierro: basa moldurada, fuste, capitel y linterna hexagonal."""
+    iron, glass = geo.MeshBuilder(), geo.MeshBuilder()
+    iron.lathe([(0.0, 0), (0.24, 0), (0.24, 0.12), (0.18, 0.2), (0.2, 0.32), (0.12, 0.5),
+                (0.12, 0.9), (0.075, 1.05), (0.06, h - 0.9), (0.09, h - 0.82), (0.07, h - 0.7),
+                (0.13, h - 0.62), (0.0, h - 0.6)], 12, (0, 0, 0))
+    glass.lathe([(0.0, h - 0.6), (0.14, h - 0.6), (0.24, h - 0.15), (0.0, h - 0.15)], 6, (0, 0, 0),
+                smooth=False)
+    iron.lathe([(0.0, h - 0.17), (0.3, h - 0.17), (0.3, h - 0.12), (0.12, h + 0.05),
+                (0.03, h + 0.18), (0.0, h + 0.25)], 6, (0, 0, 0), smooth=False)
+    for k in range(6):  # montantes de la linterna
+        a = math.radians(k * 60)
+        iron.box_c(0.23 * math.cos(a), 0.23 * math.sin(a), h - 0.6, 0.025, 0.025, 0.45)
+    return iron, glass
+
+
+def add_lamps(mm, coll, zs):
+    L_ = C.LAMPS
+    pts = list(L_["points"])
+    for (u0, v0, u1, v1, step) in L_["rows"]:
+        n = max(1, int(round(math.hypot(u1 - u0, v1 - v0) / step)))
+        pts += [(u0 + (u1 - u0) * i / n, v0 + (v1 - v0) * i / n) for i in range(n + 1)]
+    iron_src, glass_src = lamp_mesh(L_["height"])
+    iron_all, glass_all = geo.MeshBuilder(), geo.MeshBuilder()
+    for (u, v) in pts:
+        z = 0.0 if _in_poly(u, v, C.PLAZA["outline"]) else zs
+        iron_all.extend(iron_src, geo.mat_t(u, v, z))
+        glass_all.extend(glass_src, geo.mat_t(u, v, z))
+    iron_all.to_object("Faroles (hierro)", coll, [mm["hierro"]])
+    glass_all.to_object("Faroles (vidrio)", coll, [mm.get("farol_vidrio", mm["hierro"])])
+    print(f"[faroles] {len(pts)}")
 
 
 # ---------------------------------------------------------------- banderas
@@ -213,6 +296,11 @@ def add_flag(coll, mm, u, v, z, pole_h, seed=0, w=3.0, h=2.0):
             faces.append((a, a + 1, a + nx + 2, a + nx + 1))
     me = bpy.data.meshes.new(f"Bandera {seed}")
     me.from_pydata(verts, [], faces)
+    uvl = me.uv_layers.new(name="UVMap")  # u a lo largo, v de abajo (rojo) arriba (amarillo)
+    for poly in me.polygons:
+        for li in poly.loop_indices:
+            vi = me.loops[li].vertex_index
+            uvl.data[li].uv = ((vi % (nx + 1)) / nx, (vi // (nx + 1)) / nz)
     me.polygons.foreach_set("use_smooth", [True] * len(faces))
     me.materials.append(mm["bandera"])
     ob = bpy.data.objects.new(f"Bandera {seed}", me)
@@ -296,14 +384,40 @@ def add_people(mm, coll, zs):
 
 # ---------------------------------------------------------------- escena
 
-def build(stage):
+def assets_paths():
+    A = C.ASSETS
+    tex = os.path.join(A["dir"], "tex")
+    hdri = os.path.join(A["dir"], "hdri", f"{A['hdri']}_{A['hdri_res']}.hdr")
+    if os.path.isdir(tex) and os.path.exists(hdri):
+        return tex, hdri
+    return None, None
+
+
+def hdri_rotation(az_model):
+    """Rotacion en Z del HDRI para que su sol coincida con el azimut del modelo."""
+    alpha_w = 90.0 - az_model
+    return (C.ASSETS["hdri_sun_alpha"] - alpha_w) % 360
+
+
+def build(stage, haze=True):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     massing = stage == "massing"
+    tex_dir, hdri = (None, None) if massing else assets_paths()
+    if hdri:
+        import json
+        info = json.load(open(os.path.join(ROOT, C.ASSETS["info"])))
+        M.TEX = {"dir": tex_dir, "avg": {k: v["avg_linear"] for k, v in info.items()
+                                          if isinstance(v, dict) and "avg_linear" in v}}
+        C.LIGHT["datetime"] = C.ASSETS["hdri_datetime"]
+    else:
+        M.TEX = None
     elev, az_m, az = sun_for(C.LIGHT["datetime"])
-    M.HAZE = None if massing else {
+    rot = hdri_rotation(az_m) if hdri else None
+    M.HAZE = None if (massing or not haze) else {
         "dist": C.LIGHT["haze_dist"], "elev": elev, "az": az_m,
         "altitude": C.GEO["plaza_elev"], "air": C.LIGHT["sky"]["air"],
-        "aerosol": C.LIGHT["sky"]["aerosol"], "strength": 0.85}
+        "aerosol": C.LIGHT["sky"]["aerosol"], "strength": 0.85,
+        "hdri": hdri, "hdri_rot": rot}
     mm = make_materials(massing)
     root = geo.collection("Plaza de Bolivar")
     ctx = B.Ctx(mm, root, massing)
@@ -358,8 +472,21 @@ def build(stage):
     # luz y camaras
     lc = geo.collection("Luz y camaras", root)
     print(f"[sol] {C.LIGHT['datetime']}: elevacion {elev:.1f}, azimut {az:.1f} (modelo {az_m:.1f})")
-    S.setup_world(elev, az_m, C.GEO["plaza_elev"], **C.LIGHT["sky"])
-    S.add_sun(elev, az_m, C.LIGHT["sun_strength"], coll=lc)
+    if hdri:
+        S.setup_world_hdri(hdri, rot)
+        # el sol principal esta en el HDRI; la lampara alineada solo lo refuerza
+        sun = S.add_sun(elev, az_m, C.ASSETS.get("sun_boost", 0.0), coll=lc)
+        sun.data.angle = math.radians(0.6)
+        bpy.context.scene["modo_luz"] = "hdri"
+        print(f"[cielo] HDRI {os.path.basename(hdri)} rotado {rot:.1f} deg")
+    else:
+        S.setup_world(elev, az_m, C.GEO["plaza_elev"], **C.LIGHT["sky"])
+        S.add_sun(elev, az_m, C.LIGHT["sun_strength"], coll=lc)
+        bpy.context.scene["modo_luz"] = "procedural"
+    # UV de caja en metros para todas las mallas (texturas PBR y exportacion web)
+    for ob in bpy.data.objects:
+        if ob.type == "MESH" and not ob.name.startswith(("Personas", "Palomas", "Bandera")):
+            geo.add_box_uv(ob)
     for name, cam in C.CAMERAS.items():
         o = S.add_camera(name, cam["loc"], cam["target"], cam["focal"], cam.get("level", True), lc,
                          shift_x=cam.get("shift_x", 0.0))
@@ -374,12 +501,15 @@ def main():
     if not a.no_save:
         S.save_blend(os.path.join(ROOT, "blend", f"plaza_{tag}{a.suffix}.blend"))
     if a.render != "none":
-        S.setup_render(a.render, C.LIGHT["exposure"], C.LIGHT["look"], a.device)
+        hdri_mode = bpy.context.scene.get("modo_luz") == "hdri"
+        expo = C.ASSETS["exposure"] if hdri_mode else C.LIGHT["exposure"]
+        S.setup_render(a.render, expo, C.LIGHT["look"], a.device)
         cams = [c for c in a.cams.split(",") if c] or list(C.CAMERAS)
         for cam in cams:
-            elev, az_m, az = sun_for(C.CAMERAS[cam].get("datetime", C.LIGHT["datetime"]))
-            S.update_sun(elev, az_m)
-            print(f"[sol] {cam}: elevacion {elev:.1f}, azimut real {az:.1f}")
+            if not hdri_mode:  # con HDRI la hora es fija (la del cielo fotografiado)
+                elev, az_m, az = sun_for(C.CAMERAS[cam].get("datetime", C.LIGHT["datetime"]))
+                S.update_sun(elev, az_m)
+                print(f"[sol] {cam}: elevacion {elev:.1f}, azimut real {az:.1f}")
             out = os.path.join(ROOT, "renders", tag, f"{cam}_{a.render}{a.suffix}.png")
             S.render_camera(cam, out)
 

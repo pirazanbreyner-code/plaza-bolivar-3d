@@ -1,0 +1,230 @@
+{
+ "sandstone_blocks_08": {
+  "dimensions_mm": [
+   3000,
+   3000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "avg_linear": [
+   0.3771,
+   0.289,
+   0.1763
+  ]
+ },
+ "sandstone_blocks_04": {
+  "dimensions_mm": [
+   3000,
+   3000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "avg_linear": [
+   0.5617,
+   0.3771,
+   0.2163
+  ]
+ },
+ "stone_tile_wall": {
+  "dimensions_mm": [
+   2000,
+   2000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Charlotte Baglioni"
+  ],
+  "avg_linear": [
+   0.4033,
+   0.3785,
+   0.3544
+  ]
+ },
+ "concrete_pavement": {
+  "dimensions_mm": [
+   1800.0000715255737,
+   1800.0000715255737
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Charlotte Baglioni"
+  ],
+  "avg_linear": [
+   0.2143,
+   0.1764,
+   0.1346
+  ]
+ },
+ "pavement_03": {
+  "dimensions_mm": [
+   1999.9996423721313,
+   1999.9996423721313
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Dario Barresi",
+   "Charlotte Baglioni"
+  ],
+  "avg_linear": [
+   0.2163,
+   0.1586,
+   0.1152
+  ]
+ },
+ "stone_pavers": {
+  "dimensions_mm": [
+   2000,
+   2000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Amal Kumar"
+  ],
+  "avg_linear": [
+   0.1293,
+   0.095,
+   0.071
+  ]
+ },
+ "asphalt_02": {
+  "dimensions_mm": [
+   3000.000238418579,
+   3000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "avg_linear": [
+   0.1051,
+   0.1034,
+   0.0914
+  ]
+ },
+ "painted_plaster_wall": {
+  "dimensions_mm": [
+   2000,
+   2000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Amal Kumar"
+  ],
+  "avg_linear": [
+   0.4068,
+   0.3657,
+   0.3503
+  ]
+ },
+ "white_stucco": {
+  "dimensions_mm": [
+   1998.0629682540894,
+   1998.0640411376953
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Amal Kumar"
+  ],
+  "avg_linear": [
+   0.6802,
+   0.6512,
+   0.6285
+  ]
+ },
+ "clay_roof_tiles_02": {
+  "dimensions_mm": [
+   2500,
+   2500
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Amal Kumar"
+  ],
+  "avg_linear": [
+   0.3087,
+   0.0853,
+   0.0262
+  ]
+ },
+ "roof_slates_02": {
+  "dimensions_mm": [
+   3000,
+   3000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "avg_linear": [
+   0.2887,
+   0.2461,
+   0.1874
+  ]
+ },
+ "dark_wood": {
+  "dimensions_mm": [
+   2000,
+   2000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Dario Barresi",
+   "Dimitrios Savva",
+   "Rico Cilliers"
+  ],
+  "avg_linear": [
+   0.1131,
+   0.0248,
+   0.009
+  ]
+ },
+ "aerial_grass_rock": {
+  "dimensions_mm": [
+   15000,
+   15000
+  ],
+  "evs": null,
+  "whitebalance": null,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "avg_linear": [
+   0.1694,
+   0.1216,
+   0.0261
+  ]
+ },
+ "kloofendal_48d_partly_cloudy_puresky": {
+  "dimensions_mm": null,
+  "evs": 21,
+  "whitebalance": 5400,
+  "authors": [
+   "Greg Zaal",
+   "Jarod Guest"
+  ]
+ },
+ "hdri": {
+  "id": "kloofendal_48d_partly_cloudy_puresky",
+  "sun_elev": 47.9,
+  "sun_alpha_xy": 145.81,
+  "E_total": 4.858,
+  "E_sky": 1.807,
+  "E_sun_horizontal": 3.05
+ }
+}

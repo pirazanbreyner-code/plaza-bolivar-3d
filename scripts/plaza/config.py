@@ -173,6 +173,54 @@ LANDMARKS = [
      "tower": 15.0},
 ]
 
+# Recursos externos (CC0, Poly Haven). Se descargan con scripts/pod/fetch_assets.py.
+# Si no existen, la escena usa los materiales procedurales y el cielo fisico.
+ASSETS = {
+    "dir": "/workspace/assets",            # tex/<id>_<mapa>_2k.jpg, hdri/<id>_8k.hdr
+    "info": "references/data/assets_info.json",
+    "hdri": "kloofendal_48d_partly_cloudy_puresky",
+    "hdri_res": "8k",
+    # sol del HDRI: elevacion 47.9, angulo xy 145.81 -> rotacion para el 15-10 a las 14:23
+    "hdri_sun_alpha": 145.81,
+    "hdri_datetime": "2026-10-15T14:23:00",
+    "exposure": -1.25,                     # E_total HDRI 4.86 + refuerzo solar (ver RENDER_LOG)
+    # el sol del HDRI esta algo velado (directa/difusa 1.7); se refuerza con una lampara alineada
+    # para acercarlo al sol de altura de Bogota (2.600 m). Irradiancia normal anadida (W/m2 Blender)
+    "sun_boost": 2.5,
+}
+
+# Material -> textura escaneada: (id, tamano real en m, color lineal medio deseado)
+TEXTURES = {
+    "catedral_sillar": ("sandstone_blocks_08", 3.0, (0.50, 0.37, 0.23)),   # arenisca tostada (fotos)
+    "catedral_piedra": ("sandstone_blocks_04", 3.0, (0.56, 0.43, 0.28)),
+    "capitolio_sillar": ("sandstone_blocks_08", 3.6, (0.46, 0.43, 0.37)),
+    "capitolio_piedra": ("sandstone_blocks_04", 3.0, (0.50, 0.47, 0.41)),
+    "justicia_piedra": ("stone_tile_wall", 4.0, (0.66, 0.60, 0.50)),
+    "sagrario_piedra": ("sandstone_blocks_08", 2.2, (0.30, 0.28, 0.25)),
+    "sagrario_estuco": ("white_stucco", 2.0, (0.78, 0.76, 0.70)),
+    "arzobispal_sillar": ("painted_plaster_wall", 2.0, (0.80, 0.68, 0.44)),
+    "arzobispal_piedra": ("white_stucco", 2.0, (0.84, 0.83, 0.79)),
+    "crema": ("painted_plaster_wall", 2.0, (0.80, 0.68, 0.44)),
+    "ocre_rojo": ("painted_plaster_wall", 2.0, (0.55, 0.28, 0.17)),
+    "molduras_blancas": ("white_stucco", 2.0, (0.85, 0.84, 0.80)),
+    "lievano_estuco": ("painted_plaster_wall", 2.0, (0.80, 0.56, 0.20)),   # amarillo ocre (fotos)
+    "lievano_molduras": ("white_stucco", 2.0, (0.86, 0.85, 0.81)),
+    "lievano_piedra": ("sandstone_blocks_08", 3.0, (0.52, 0.49, 0.44)),
+    "colonial_blanco": ("white_stucco", 2.0, (0.86, 0.85, 0.81)),
+    "cupula": ("sandstone_blocks_04", 3.0, (0.60, 0.52, 0.39)),
+    "pedestal": ("sandstone_blocks_04", 2.0, (0.22, 0.21, 0.19)),
+    "teja": ("clay_roof_tiles_02", 2.5, None),
+    "cupula_roja": ("clay_roof_tiles_02", 1.6, (0.42, 0.05, 0.035)),     # cupula del Sagrario
+    "pizarra": ("roof_slates_02", 3.0, (0.16, 0.17, 0.19)),
+    "plaza": ("concrete_pavement", 1.8, (0.24, 0.23, 0.21)),          # losas grises (fotos)
+    "plaza_franjas": ("concrete_pavement", 1.8, (0.40, 0.37, 0.32)),  # franjas claras
+    "adoquin": ("pavement_03", 2.0, None),
+    "anden": ("stone_pavers", 2.0, (0.30, 0.28, 0.25)),
+    "asfalto": ("asphalt_02", 3.0, None),
+    "madera": ("dark_wood", 2.0, None),
+    "bordillo": ("sandstone_blocks_04", 2.0, (0.42, 0.41, 0.39)),
+}
+
 LIGHT = {
     "datetime": "2026-10-15T15:45:00",
     # calibrado con scripts/calibrate_light.py: relacion directa/difusa ~3
@@ -185,6 +233,19 @@ LIGHT = {
 
 # Astas con bandera (u, v, z base, altura del asta): Justicia (foto) y Capitolio (foto) | estimado
 FLAGS = [(-27.0, 62.5, -0.12, 12.0), (-13.0, 62.5, -0.12, 12.0), (3.5, -71.0, 20.0, 7.0)]
+
+# Retícula de franjas claras del piso de la plaza (fotos) | estimado
+PLAZA_BANDS = {"every": 7.2, "width": 0.45, "u": (-39.6, 39.8), "v": (-50.1, 47.5)}
+
+# Faroles de hierro (fotos: frente al Lievano y en la Cra 7) | posiciones estimadas
+LAMPS = {
+    "height": 4.6,
+    "rows": [  # (u0, v0, u1, v1, separacion)
+        (-51.6, -48.0, -51.6, 52.0, 10.0),     # anden de la Cra 8, frente a los portales
+        (47.6, -44.0, 47.6, 46.0, 12.0),       # Cra 7, al pie de las gradas del atrio
+    ],
+    "points": [(-39.0, -49.5), (39.2, -49.6), (38.6, 47.2), (-38.7, 47.0)],  # esquinas
+}
 
 PEOPLE = {"n": 70, "seed": 4, "pigeons": 260, "cam_clear_r": 9.0}
 

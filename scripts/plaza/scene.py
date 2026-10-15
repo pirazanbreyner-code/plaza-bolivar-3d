@@ -227,3 +227,29 @@ def update_sun(elev_deg, az_model_deg):
     sun = bpy.data.objects.get("Sol")
     if sun:
         sun.rotation_euler = (math.radians(90 - elev_deg), 0.0, math.radians(180 - az_model_deg))
+
+
+def setup_world_hdri(path, rot_deg, strength=1.0):
+    """Cielo con HDRI real (rotado para alinear su sol con el sol de la fecha elegida)."""
+    w = bpy.data.worlds.get("Cielo") or bpy.data.worlds.new("Cielo")
+    bpy.context.scene.world = w
+    t = M.NT(w)
+    tc = t.n("ShaderNodeTexCoord")
+    mp = t.n("ShaderNodeMapping")
+    mp.inputs["Rotation"].default_value = (0, 0, math.radians(rot_deg))
+    t.l(tc.outputs["Generated"], mp.inputs["Vector"])
+    env = t.n("ShaderNodeTexEnvironment")
+    env.image = bpy.data.images.load(path, check_existing=True)
+    t.l(mp.outputs[0], env.inputs["Vector"])
+    bg = t.n("ShaderNodeBackground", inputs={"Strength": strength})
+    t.l(env.outputs[0], bg.inputs["Color"])
+    out = t.n("ShaderNodeOutputWorld")
+    t.l(bg.outputs[0], out.inputs["Surface"])
+    w["hdri"] = path
+    w["hdri_rot"] = rot_deg
+    try:  # mapa de importancia con resolucion suficiente para el disco solar
+        w.cycles.sampling_method = "MANUAL"
+        w.cycles.sample_map_resolution = 4096
+    except Exception:
+        pass
+    return w

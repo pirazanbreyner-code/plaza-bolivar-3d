@@ -10,6 +10,8 @@ _CACHE = {}
 # Bruma atmosferica (perspectiva aerea). build.py la configura antes de crear materiales:
 # HAZE = {"dist": 7000, "elev": deg, "az": deg, "altitude": m, "air":..., "aerosol":...}
 HAZE = None
+# Texturas PBR (CC0). build.py lo configura: {"dir": ruta, "avg": {id: [r,g,b] lineal}}
+TEX = None
 
 
 # ---------------------------------------------------------------- utilidades de nodos
@@ -179,8 +181,16 @@ def _output(t, shader, haze=True):
     t.nt.nodes[-1].inputs[3].default_value = -1.0   # escala -1: direccion camara -> punto
     flat = t.vmath("MULTIPLY", view, (1.0, 1.0, 0.0))
     d = t.vmath("NORMALIZE", t.vmath("ADD", flat, (0.0, 0.0, 0.06)))
-    sky = _sky_node(t, HAZE["elev"], HAZE["az"], HAZE)
-    t.l(d, sky.inputs["Vector"])
+    if HAZE.get("hdri"):
+        sky = t.n("ShaderNodeTexEnvironment")
+        sky.image = bpy.data.images.load(HAZE["hdri"], check_existing=True)
+        mp = t.n("ShaderNodeMapping")
+        mp.inputs["Rotation"].default_value = (0, 0, __import__("math").radians(HAZE["hdri_rot"]))
+        t.l(d, mp.inputs["Vector"])
+        t.l(mp.outputs[0], sky.inputs["Vector"])
+    else:
+        sky = _sky_node(t, HAZE["elev"], HAZE["az"], HAZE)
+        t.l(d, sky.inputs["Vector"])
     em = t.n("ShaderNodeEmission", inputs={"Strength": HAZE.get("strength", 1.0)})
     t.l(sky.outputs[0], em.inputs["Color"])
     cam = t.n("ShaderNodeCameraData")
@@ -602,4 +612,61 @@ def lamp_glass(name="Farol vidrio"):
     t = NT(m)
     p = _principled(t, (0.9, 0.85, 0.7, 1), 0.25)
     p.inputs["Transmission Weight"].default_value = 0.6
+    return m
+
+
+# ---------------------------------------------------------------- PBR con texturas escaneadas
+
+def _img(t, path, noncolor):
+    im = bpy.data.images.load(path, check_existing=True)
+    if noncolor:
+        im.colorspace_settings.name = "Non-Color"
+    n = t.n("ShaderNodeTexImage", interpolation="Cubic" if not noncolor else "Linear")
+    n.image = im
+    return n
+
+
+def pbr(name, tex, tile, tint=None, tint_mix=1.0, rough_mul=1.0, rough_add=0.0, nrm=1.0,
+        grime=1.0, var=0.10, spec=0.5, metallic=0.0):
+    """Material con texturas PBR (diff/rough/nor) sobre el atributo 'UVMap' en metros.
+
+    tile = tamano real (m) que cubre la textura. tint = color lineal medio deseado.
+    Devuelve None si las texturas no estan disponibles (el llamador usa el procedural).
+    """
+    import os
+    if TEX is None or tex not in TEX["avg"]:
+        return None
+    base = os.path.join(TEX["dir"], tex)
+    if not os.path.exists(base + "_diff_2k.jpg"):
+        return None
+    m, new = _new_mat(name)
+    if not new:
+        return m
+    t = NT(m)
+    uv = t.n("ShaderNodeAttribute", attribute_name="UVMap").outputs["Vector"]
+    mp = t.n("ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (1.0 / tile, 1.0 / tile, 1.0)
+    t.l(uv, mp.inputs["Vector"])
+    v = mp.outputs[0]
+    dif = _img(t, base + "_diff_2k.jpg", False)
+    t.l(v, dif.inputs["Vector"])
+    col = dif.outputs["Color"]
+    if tint is not None:
+        avg = TEX["avg"][tex]
+        f = tuple(min(8.0, tint[i] / max(avg[i], 1e-3)) for i in range(3)) + (1.0,)
+        col = t.mix(tint_mix, col, t.mix(1.0, col, f, "MULTIPLY"))
+    tc = t.n("ShaderNodeTexCoord")
+    big = t.noise(tc.outputs["Object"], 0.12, 4, 0.55).outputs["Fac"]
+    k = t.maprange(big, 0.3, 0.7, 1.0 - var, 1.0 + var)
+    col = t.mix(1.0, col, t.combine(k, k, k), "MULTIPLY")
+    col = _grime(t, col, grime)
+    rgh = _img(t, base + "_rough_2k.jpg", True)
+    t.l(v, rgh.inputs["Vector"])
+    r = t.math("ADD", t.math("MULTIPLY", rgh.outputs["Color"], rough_mul), rough_add, clamp=True)
+    nor = _img(t, base + "_nor_2k.jpg", True)
+    t.l(v, nor.inputs["Vector"])
+    nm = t.n("ShaderNodeNormalMap", space="TANGENT", uv_map="UVMap", inputs={"Strength": nrm})
+    t.l(nor.outputs["Color"], nm.inputs["Color"])
+    p = _principled(t, col, r, nm.outputs["Normal"], metallic=metallic, spec=spec)
+    m["pbr"] = {"tex": tex, "tile": tile, "tint": list(tint) if tint else None}
     return m

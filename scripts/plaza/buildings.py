@@ -414,7 +414,8 @@ def palacio_generico(ctx, b, root, name, wall_mat, trim_mat, roof=None):
 # ====================================================================== SAGRARIO
 
 def sagrario(ctx, b, root):
-    """Capilla del Sagrario: fachada-retablo barroca, espadana y cupula."""
+    """Capilla del Sagrario segun fotos: fachada de silleria oscura con portada barroca,
+    oculo, dos espadanas gemelas y cupula de teja roja con nervios blancos y linterna."""
     L, D, H = b["length"], b["depth"], b["height"]
     coll = ctx.coll("Capilla del Sagrario")
     m = ctx.m
@@ -422,52 +423,88 @@ def sagrario(ctx, b, root):
         mb = MeshBuilder()
         mb.box(0, 0, 0, L, D, H)
         return _finish(mb, "Sagrario massing", coll, [m["massing"]], root)
-    wall, trim, cut, fr, gl, cols, rf, met = (MeshBuilder() for _ in range(8))
-    ha = b.get("atrium_h", 0.0)
-    wall.box(0, 0, 0, L, D, H)
+    wall, side, trim, cut, fr, gl, cols, rf, met, dome, ribs = (MeshBuilder() for _ in range(11))
     xm = L / 2
-    # portada en piedra: dos cuerpos con columnas pareadas
-    pw = L * 0.55
-    trim.box(xm - pw / 2, -0.6, 0, xm + pw / 2, 0.05, H * 0.92)
-    o = arch(xm - 1.5, xm + 1.5, ha, ha + 5.2, 16)
-    cut.prism_xz(o, -2, 0.9)
-    fr.prism_xz(o, 0.8, 0.95, 0)
-    for s in (-1, 1):
-        for k in (1.55, 2.45):
-            geo.add_column(cols, xm + s * k, -0.9, ha, 6.8, 0.26, "corinthian", 0, 16)
-            geo.add_column(cols, xm + s * k, -0.9, ha + 7.6, 4.6, 0.20, "ionic", 0, 16)
-    trim.sweep_x(geo.cornice_profile(0.9, 0.7), xm - pw / 2 - 0.3, xm + pw / 2 + 0.3, 0,
-                 geo.mat_t(0, -0.65, ha + 6.8))
-    _windows(cut, fr, gl, trim, [xm], ha + 8.4, 1.6, 2.8, arch_top=True, depth=0.4,
-             wall_y=-0.6)
-    trim.tri_prism_pediment(xm - pw / 2, xm + pw / 2, ha + 12.3, 2.2, -0.9, 0.0)
-    # espadana con dos vanos para campanas
-    ew = L * 0.4
-    wall.box(xm - ew / 2, 0.2, H, xm + ew / 2, 1.2, H + 5.5)
-    for s in (-1, 1):
-        cut.prism_xz(arch(xm + s * ew * 0.22 - 0.7, xm + s * ew * 0.22 + 0.7, H + 1.2, H + 3.6, 12),
-                     -1, 3)
-    trim.tri_prism_pediment(xm - ew / 2 - 0.3, xm + ew / 2 + 0.3, H + 5.5, 1.6, 0.0, 1.4)
-    met.box(xm - 0.08, 0.6, H + 7.1, xm + 0.08, 0.8, H + 9.0)
-    met.box(xm - 0.5, 0.6, H + 8.1, xm + 0.5, 0.8, H + 8.3)
-    # cupula sobre el crucero
-    rd = b.get("dome_r", 4.5)
-    cy = D * 0.7
+    # fachada de piedra (cuerpo frontal) y nave estucada detras
+    wall.box(0, 0, 0, L, 3.0, H)
+    side.box(0.3, 3.0, 0, L - 0.3, D, H - 1.5)
+    # cornisa superior de la fachada
+    trim.sweep_x(geo.cornice_profile(1.0, 0.7), -0.3, L + 0.3, 0, geo.mat_t(0, 0, H - 1.0))
+    # portada barroca en relieve
+    pw = 6.2
+    trim.box(xm - pw / 2, -0.45, 0, xm + pw / 2, 0.05, 12.8)
+    o = arch(xm - 1.55, xm + 1.55, 0, 4.4, 16)
+    cut.prism_xz(o, -2, 1.2)
+    fr.prism_xz(o, 1.0, 1.15, 0)
+    for s_ in (-1, 1):
+        for k in (2.05, 2.75):
+            geo.add_column(cols, xm + s_ * k, -0.75, 0, 6.6, 0.24, "corinthian", 0, 16)
+            geo.add_column(cols, xm + s_ * (k - 0.3), -0.75, 7.4, 4.0, 0.18, "ionic", 0, 16)
+    trim.sweep_x(geo.cornice_profile(0.8, 0.6), xm - pw / 2 - 0.3, xm + pw / 2 + 0.3, 0,
+                 geo.mat_t(0, -0.5, 6.6))
+    # hornacina sobre la puerta y oculo
+    cut.prism_xz(arch(xm - 0.75, xm + 0.75, 7.6, 10.2, 12), -1, 0.4)
+    trim.lathe([(0.0, 0), (0.95, 0), (0.95, 0.35), (0.0, 0.35)], 24, (0, 0, 0),
+               matrix=geo.mat_t(xm, -0.42, 13.9) @ _rot_x(90))
+    gl.lathe([(0.0, 0), (0.6, 0), (0.6, 0.05), (0.0, 0.05)], 24, (0, 0, 0),
+             matrix=geo.mat_t(xm, -0.45, 13.9) @ _rot_x(90))
+    trim.tri_prism_pediment(xm - pw / 2 - 0.3, xm + pw / 2 + 0.3, 12.8, 1.4, -0.6, 0.0)
+    # dos espadanas gemelas con vanos de campanas
+    ew, eh, ed = 3.3, 5.2, 2.0
+    trim.box(0.2, 0.2, H, L - 0.2, 1.4, H + 1.0)                          # antepecho
+    for ex in (L * 0.25, L * 0.75):
+        wall.box(ex - ew / 2, 0.2, H, ex + ew / 2, 0.2 + ed, H + eh)
+        for dx in (-0.75, 0.75):
+            cut.prism_xz(arch(ex + dx - 0.45, ex + dx + 0.45, H + 1.6, H + 3.6, 12), -1, 3.5)
+            met.lathe([(0, 0), (0.38, 0), (0.3, 0.15), (0.22, 0.55), (0.1, 0.7), (0, 0.7)], 12,
+                      (ex + dx, 1.2, H + 2.5))
+        trim.box(ex - ew / 2 - 0.25, -0.05, H + eh - 0.4, ex + ew / 2 + 0.25, ed + 0.45, H + eh)
+        trim.tri_prism_pediment(ex - ew / 2 - 0.1, ex + ew / 2 + 0.1, H + eh, 1.2, 0.0, ed + 0.3)
+        for px in (ex - ew / 2, ex + ew / 2):                              # pinaculos
+            trim.lathe([(0, 0), (0.22, 0), (0.22, 0.3), (0.08, 0.5), (0.14, 0.8), (0, 1.3)], 10,
+                       (px, 0.4, H + eh))
+        met.box(ex - 0.05, 1.0, H + eh + 1.1, ex + 0.05, 1.1, H + eh + 2.4)
+        met.box(ex - 0.35, 1.0, H + eh + 1.9, ex + 0.35, 1.1, H + eh + 2.0)
+    # cupula: tambor estucado con ventanas, casquete de teja roja con nervios blancos, linterna
+    rd = b.get("dome_r", 4.2)
     dr = b.get("drum_h", 4.5)
-    wall.lathe([(rd + 0.3, 0), (rd + 0.3, dr), (0, dr)], 16, (xm, cy, H))
-    rf.lathe([(rd, 0)] + [(rd * math.cos(math.radians(a)), rd * 1.1 * math.sin(math.radians(a)))
-                          for a in range(10, 91, 10)], 24, (xm, cy, H + dr))
-    trim.lathe([(0.8, 0), (0.8, 1.6), (1.0, 1.7), (0, 2.6)], 12, (xm, cy, H + dr + rd * 1.1 - 0.2))
+    cy = D * 0.62
+    zb = H - 1.5
+    side.lathe([(rd + 0.35, 0), (rd + 0.35, dr), (0.0, dr)], 24, (xm, cy, zb))
+    trim.lathe([(rd + 0.6, dr - 0.4), (rd + 0.6, dr), (0, dr)], 24, (xm, cy, zb))
+    prof = [(rd, 0.0)] + [(rd * math.cos(math.radians(a)), rd * 1.05 * math.sin(math.radians(a)))
+                          for a in range(8, 91, 6)]
+    dome.lathe(prof, 48, (xm, cy, zb + dr))
+    for k in range(8):                                                     # nervios
+        ang = k * 45.0
+        rib = MeshBuilder()
+        for i in range(len(prof) - 1):
+            (r0, z0), (r1, z1) = prof[i], prof[i + 1]
+            rib.box(r0 - 0.02, -0.16, z0, r0 + 0.14, 0.16, z1 + 0.05)
+        ribs.extend(rib, geo.mat_t(xm, cy, zb + dr, ang))
+    zl = zb + dr + rd * 1.05
+    side.lathe([(0.95, -0.2), (0.95, 1.8), (0.0, 1.8)], 16, (xm, cy, zl))
+    dome.lathe([(1.15, 0), (0.7, 0.6), (0.2, 1.0), (0.0, 1.1)], 16, (xm, cy, zl + 1.8))
+    met.box(xm - 0.06, cy - 0.06, zl + 2.9, xm + 0.06, cy + 0.06, zl + 4.4)
+    met.box(xm - 0.45, cy - 0.06, zl + 3.8, xm + 0.45, cy + 0.06, zl + 3.95)
+    for k in range(8):                                                     # ventanas del tambor
+        ang = math.radians(k * 45 + 22.5)
+        gl.box_c(xm + (rd + 0.37) * math.cos(ang), cy + (rd + 0.37) * math.sin(ang), zb + 1.2,
+                 0.5, 0.5, 1.8)
     rr = MeshBuilder()
-    rr.hip_roof(-0.3, 1.0, L + 0.3, D + 0.3, H, 3.0, L / 2 - 0.4, 0)
-    _finish(wall, "Sagrario muros", coll, [m["sagrario_estuco"]], root, 0.015, cut)
+    rr.hip_roof(0.0, 3.0, L, D + 0.3, H - 1.5, 3.2, L / 2 - 0.3, 0)
+    roof = MeshBuilder()
+    roof.extend(rr)
+    _finish(wall, "Sagrario fachada", coll, [m["sagrario_piedra"]], root, 0.015, cut)
+    _finish(side, "Sagrario nave y tambor", coll, [m["sagrario_estuco"]], root, 0.01)
     _finish(trim, "Sagrario portada", coll, [m["sagrario_piedra"]], root, 0.01)
     _finish(cols, "Sagrario columnas", coll, [m["sagrario_piedra"]], root)
-    _finish(rf, "Sagrario cupula", coll, [m["cupula"]], root)
-    _finish(rr, "Sagrario tejado", coll, [m["teja"]], root)
+    _finish(dome, "Sagrario cupula", coll, [m["cupula_roja"]], root)
+    _finish(ribs, "Sagrario nervios de la cupula", coll, [m["molduras_blancas"]], root)
+    _finish(roof, "Sagrario tejado", coll, [m["teja"]], root)
     _finish(fr, "Sagrario puerta", coll, [m["madera"]], root)
     _finish(gl, "Sagrario vidrios", coll, [m["vidrio"]], root)
-    _finish(met, "Sagrario metal", coll, [m["hierro"]], root)
+    _finish(met, "Sagrario campanas y cruces", coll, [m["hierro"]], root)
 
 
 # ====================================================================== PALACIO DE JUSTICIA
@@ -589,7 +626,7 @@ def lievano(ctx, b, root):
     arc.box(0, 0, 0, L, 1.2, ah)                 # frente de la arcada
     ow = bw - pier
     for x in xs:
-        acut.prism_xz(arch(x - ow / 2, x + ow / 2, -0.1, ah - ow / 2 - 0.7, 14), -1, 2.2)
+        acut.prism_xz(arch(x - ow / 2, x + ow / 2, -0.1, ah - 1.25, 14, rise=0.35), -1, 2.2)
         fr.prism_xz(rect(x - 0.9, 0, x + 0.9, 3.3), ad - 0.12, ad + 0.02, 0)   # puertas de locales
     trim.box(-0.1, 1.2, ah - 0.35, L + 0.1, ad, ah)              # techo de los portales
     trim.sweep_x(geo.string_course_profile(0.45, 0.25), -0.15, L + 0.15, 0, geo.mat_t(0, 0, ah - 0.1))
@@ -601,8 +638,8 @@ def lievano(ctx, b, root):
         z = ah + f * fh
         wh = fh * (0.62 if f == 0 else 0.52)
         zs = z + (fh - wh) * (0.55 if f == 0 else 0.45)
-        _windows(cut, fr, gl, trim, xs, zs, b["win_w"], wh, lintel=0.28,
-                 pediment=(f == 0), balcony=(f == 0), trim_mat=0)
+        _windows(cut, fr, gl, trim, xs, zs, b["win_w"], wh, lintel=None if f == nf - 1 else 0.28,
+                 pediment=(f == 0), balcony=(f == 0), trim_mat=0, arch_top=(f == nf - 1))
         if f == 0:
             for x in xs:
                 _railing(met, x - b["win_w"] / 2 - 0.3, x + b["win_w"] / 2 + 0.3, -0.72,
