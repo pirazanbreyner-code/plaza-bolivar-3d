@@ -96,7 +96,7 @@ Si se cambian solo los tintes de `config.TEXTURES`, basta con `scripts/web_color
    como "Runpod PyTorch". Abre su terminal web o JupyterLab.
 2. Ejecuta:
    ```bash
-   git clone https://github.com/<usuario>/<repo>.git && cd <repo>
+   git clone https://github.com/pirazanbreyner-code/plaza-bolivar-3d.git && cd plaza-bolivar-3d
    ./runpod.sh                 # 4 cámaras en calidad "ultra" (1920×1080, hasta 1536 muestras)
    ./runpod.sh final4k         # o en 4K
    ```

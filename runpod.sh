@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Render en un pod de Runpod (o cualquier Linux con GPU NVIDIA).
 #
-#   git clone https://github.com/<usuario>/<repo>.git && cd <repo> && ./runpod.sh [ultra|final|final4k] [camaras]
+#   git clone https://github.com/pirazanbreyner-code/plaza-bolivar-3d.git && cd plaza-bolivar-3d && ./runpod.sh [ultra|final|final4k] [camaras]
 #
 # Ejemplos:
 #   ./runpod.sh                       # las 4 camaras en calidad "ultra" (1920x1080, hasta 1536 muestras)
